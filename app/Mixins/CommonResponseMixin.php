@@ -17,26 +17,10 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 200,
+                'status' => 200,
                 'message' => $message ?? __('Success'),
                 'data' => $data
             ]);
-        };
-    }
-
-    /**
-     * Set success - no content response
-     *
-     * @param array  $data    Response data. Defaults to empty array.
-     * @param string $messageId Response message id. Defaults to 'SUCCESS'.
-     * @param string $message Response message. Defaults to null.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function respondNoContent()
-    {
-        return function ($headers = []) {
-            return $this->noContent(204, $headers);
         };
     }
 
@@ -53,7 +37,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 202,
+                'status' => 202,
                 'message' => $message ?? __('Accepted'),
                 'data' => $data
             ]);
@@ -72,7 +56,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 422,
+                'status' => 422,
                 'message' => $message ?? __('Invalid Parameters'),
                 'data' => $data
             ]);
@@ -90,7 +74,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 400,
+                'status' => 400,
                 'message' => $message ?? __('Bad Request'),
                 'data' => $data
             ]);
@@ -108,7 +92,7 @@ class CommonResponseMixin
     {
         return function ($message = null) {
             return $this->setResponse([
-                'code' => 401,
+                'status' => 401,
                 'message' => $message ?? __('Unauthorized'),
             ]);
         };
@@ -126,7 +110,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 403,
+                'status' => 403,
                 'message' => $message ?? __('Forbidden'),
                 'data' => $data
             ]);
@@ -146,7 +130,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 404,
+                'status' => 404,
                 'message' => $message ?? __('Not Found'),
                 'data' => $data
             ]);
@@ -164,7 +148,7 @@ class CommonResponseMixin
     {
         return function () {
             return $this->setResponse([
-                'code' => 405,
+                'status' => 405,
                 'message' => $message ?? __('Method Not Allowed'),
             ]);
         };
@@ -183,7 +167,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 409,
+                'status' => 409,
                 'message' => $message ?? __('Conflict'),
                 'data' => $data
             ]);
@@ -201,7 +185,7 @@ class CommonResponseMixin
     {
         return function ($data = [], $message = null) {
             return $this->setResponse([
-                'code' => 500,
+                'status' => 500,
                 'message' => $message ?? __('Server Error'),
                 'data' => $data
             ]);
@@ -213,7 +197,7 @@ class CommonResponseMixin
      *
      * @param array  $options   Array of response options
      *      $options = [
-     *          'code'        => (int) Response status code. Defaults to 200.
+     *          'status'        => (int) Response status code. Defaults to 200.
      *          'message'       => (string) Response message. Defaults to null.
      *          'data'          => (array?) Response data. Defaults to empty array.
      *      ]
@@ -229,10 +213,10 @@ class CommonResponseMixin
             ];
 
             // Set default values
-            $code = $options['code'] ?? 200;
+            $status = $options['status'] ?? 200;
 
             // Initialize response array
-            $response = [];
+            $response = ['status' => $status];
 
             // Attach data if passed
             if (isset($options['data'])) {
@@ -243,7 +227,7 @@ class CommonResponseMixin
                 $response['message'] = __($options['message']);
             }
 
-            return $this->json($response, $code, $headers);
+            return $this->json($response, $status, $headers);
         };
     }
 }

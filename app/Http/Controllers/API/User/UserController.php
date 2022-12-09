@@ -19,6 +19,7 @@ class UserController extends Controller
     /**
      * User register api
      *
+     * @param \App\Http\Requests\RegisterRequest $request
      * @return \Illuminate\Http\Response
      */
     public function register(RegisterRequest $request)
@@ -37,7 +38,7 @@ class UserController extends Controller
             ];
             User::create($data);
             $responseData = [
-                'first_name' => $data['first_name'],
+                'first_name' => $requestData['first_name'],
                 'verification_token' => $vtoken,
             ];
 
@@ -50,6 +51,7 @@ class UserController extends Controller
     /**
      * User login api
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
@@ -60,8 +62,7 @@ class UserController extends Controller
             'activated' => UserStatus::Active,
         ])) {
             $user = $request->user();
-            $data['token'] =  $user->createToken('OURNews')->plainTextToken;
-            $data['first_name'] =  $user->first_name;
+            $data = ['token' => $user->createToken('OURNews')->plainTextToken];
 
             return response()->respondSuccess($data, 'User login successfully.');
         }
@@ -72,6 +73,7 @@ class UserController extends Controller
     /**
      * User logout api
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
@@ -86,6 +88,37 @@ class UserController extends Controller
         }
 
         return response()->respondBadRequest([], 'Something went wrong.');
+    }
+
+    /**
+     * User detail api
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verification(Request $request)
+    {
+        try {
+            $user = User::where(
+                [
+                    'email' => $request->email,
+                    'verification_token' => $request->token,
+                ]
+            )
+                ->first();
+
+            if ($user) {
+                $user->verification_token = null;
+                $user->activated = UserStatus::Active;
+                $user->save();
+
+                return response()->respondSuccess([], 'User verified successfully.');
+            }
+
+            return response()->respondBadRequest([], 'Invalid email or verification token. Please try again.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
     }
 
     /**
