@@ -24,8 +24,9 @@ Route::prefix('/users')->group(function () {
     Route::post('/login', [ReaderController::class, 'login']);
     Route::post('/logout', [ReaderController::class, 'logout']);
     Route::post('/verification', [ReaderController::class, 'verification']);
+    Route::post('/forgot-password', [ReaderController::class, 'forgotPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/detail', [ReaderController::class, 'detail']);
+        Route::get('/profile', [ReaderController::class, 'profile']);
     });
 });

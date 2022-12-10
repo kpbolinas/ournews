@@ -46,4 +46,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the removed comment mails for the user.
+     */
+    public function mails()
+    {
+        return $this->hasMany(CommentRemoveMail::class, 'commenter_user_id');
+    }
 }

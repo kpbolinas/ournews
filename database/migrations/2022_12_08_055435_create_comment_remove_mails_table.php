@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comments_remove_mails', function (Blueprint $table) {
+        Schema::create('comment_remove_mails', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comment_id');
+            $table->foreignId('commenter_user_id');
             $table->foreignId('remover_user_id');
+            $table->string('subject');
             $table->text('content');
             $table->timestamps();
             $table->softDeletes();
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments_remove_mails');
+        Schema::dropIfExists('comment_remove_mails');
     }
 };

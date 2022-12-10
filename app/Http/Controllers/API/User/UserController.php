@@ -6,12 +6,15 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\User\UserProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+use PhpParser\Node\Stmt\TryCatch;
 use Throwable;
 
 class UserController extends Controller
@@ -24,9 +27,11 @@ class UserController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        DB::beginTransaction();
+
         try {
             $requestData = $request->all();
-            $vtoken = Str::random(10);
+            $vtoken = 'UR' . Str::random(10);
             $data = [
                 'email' => $requestData['email'],
                 'first_name' => $requestData['first_name'],
@@ -36,14 +41,31 @@ class UserController extends Controller
                 'activated' => UserStatus::Inactive,
                 'verification_token' => $vtoken,
             ];
-            User::create($data);
-            $responseData = [
-                'first_name' => $requestData['first_name'],
-                'verification_token' => $vtoken,
-            ];
+            $user = User::create($data);
 
-            return response()->respondSuccess($responseData, 'User registered successfully.');
+            if ($user) {
+                //TO DO - send mail
+                $mail = true;
+
+                if ($mail) {
+                    $responseData = [
+                        'first_name' => $requestData['first_name'],
+                        'verification_token' => $vtoken,
+                    ];
+                    DB::commit();
+
+                    return response()->respondSuccess($responseData, 'User registered successfully.');
+                }
+                DB::rollBack();
+
+                return response()->respondBadRequest([], 'User registration failed. Unable to send email.');
+            }
+            DB::rollBack();
+
+            return response()->respondBadRequest([], 'User registration failed.');
         } catch (Throwable $th) {
+            DB::rollBack();
+
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -56,18 +78,23 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-            'activated' => UserStatus::Active,
-        ])) {
-            $user = $request->user();
-            $data = ['token' => $user->createToken('OURNews')->plainTextToken];
+        try {
+            if (Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password,
+                'activated' => UserStatus::Active,
+            ])) {
+                $user = $request->user();
+                PersonalAccessToken::where('tokenable_id', $user->id)->delete();
+                $data = ['token' => $user->createToken('OURNews')->plainTextToken];
 
-            return response()->respondSuccess($data, 'User login successfully.');
+                return response()->respondSuccess($data, 'User login successfully.');
+            }
+
+            return response()->respondBadRequest([], 'Invalid email or password. Please try again.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
         }
-
-        return response()->respondBadRequest([], 'Invalid email or password. Please try again.');
     }
 
     /**
@@ -78,20 +105,25 @@ class UserController extends Controller
      */
     public function logout(Request $request)
     {
-        $accessToken = $request->bearerToken();
-        if ($accessToken) {
-            $token = PersonalAccessToken::findToken($accessToken);
+        try {
+            $accessToken = $request->bearerToken();
 
-            if ($token && $token->delete()) {
-                return response()->respondSuccess([], 'User logout successfully.');
+            if ($accessToken) {
+                $token = PersonalAccessToken::findToken($accessToken);
+
+                if ($token && $token->delete()) {
+                    return response()->respondSuccess([], 'User logout successfully.');
+                }
             }
-        }
 
-        return response()->respondBadRequest([], 'Something went wrong.');
+            return response()->respondBadRequest([], 'Something went wrong.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
     }
 
     /**
-     * User detail api
+     * User verification api
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -109,10 +141,27 @@ class UserController extends Controller
 
             if ($user) {
                 $user->verification_token = null;
-                $user->activated = UserStatus::Active;
+                $type = substr($request->token, 0, 2);
+                $message = '';
+
+                switch ($type) {
+                    case 'UR': // User Registration
+                        $user->activated = UserStatus::Active;
+                        $message = 'User verified successfully.';
+                        break;
+
+                    case 'FP': // Forgot Password
+                        $user->password = Hash::make(config('custom.default_password'));
+                        $message = 'User password reset successful.';
+                        break;
+
+                    default:
+                        # code...
+                        break;
+                }
                 $user->save();
 
-                return response()->respondSuccess([], 'User verified successfully.');
+                return response()->respondSuccess([], $message);
             }
 
             return response()->respondBadRequest([], 'Invalid email or verification token. Please try again.');
@@ -122,16 +171,55 @@ class UserController extends Controller
     }
 
     /**
-     * User detail api
+     * User forgot password api
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function detail(Request $request)
+    public function forgotPassword(Request $request)
     {
-        $vtoken = Str::random(10);
-        return response()->respondSuccess(
-            ['vtoken' => $vtoken],
-            'User details.'
-        );
+        DB::beginTransaction();
+
+        try {
+            $user = User::where(['email' => $request->email])->first();
+
+            if ($user) {
+                $vtoken = 'FP' . Str::random(10);
+                $user->verification_token = $vtoken;
+
+                if ($user->save()) {
+                    // TO DO - Send mail
+                    $mail = true;
+
+                    if ($mail) {
+                        DB::commit();
+
+                        return response()->respondSuccess(['token' => $vtoken], 'Email sent.');
+                    }
+                }
+                DB::rollBack();
+
+                return response()->respondBadRequest([], 'Something went wrong. Unable to send email.');
+            }
+            DB::rollBack();
+
+            return response()->respondBadRequest([], 'Something went wrong. Unable to send email.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
+    }
+
+    /**
+     * User profile api
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function profile(Request $request)
+    {
+        $userProfile = new UserProfileResource($request->user());
+
+        return response()->respondSuccess($userProfile, 'Okay.');
     }
 }
