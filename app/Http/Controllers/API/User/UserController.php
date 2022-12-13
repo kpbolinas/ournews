@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API\User;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\EditInfoRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\User\UserProfileResource;
+use App\Http\Resources\ProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
-use PhpParser\Node\Stmt\TryCatch;
 use Throwable;
 
 class UserController extends Controller
@@ -30,13 +31,10 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $requestData = $request->all();
+            $data = $request->validated();
             $vtoken = 'UR' . Str::random(10);
-            $data = [
-                'email' => $requestData['email'],
-                'first_name' => $requestData['first_name'],
-                'last_name' => $requestData['last_name'],
-                'password' => Hash::make($requestData['password']),
+            $data['password'] = Hash::make($data['password']);
+            $data += [
                 'role' => UserRole::User,
                 'activated' => UserStatus::Inactive,
                 'verification_token' => $vtoken,
@@ -49,7 +47,7 @@ class UserController extends Controller
 
                 if ($mail) {
                     $responseData = [
-                        'first_name' => $requestData['first_name'],
+                        'first_name' => $data['first_name'],
                         'verification_token' => $vtoken,
                     ];
                     DB::commit();
@@ -218,8 +216,49 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
-        $userProfile = new UserProfileResource($request->user());
+        $userProfile = new ProfileResource($request->user());
 
         return response()->respondSuccess($userProfile, 'Okay.');
+    }
+
+    /**
+     * User change password api
+     *
+     * @param \App\Http\Requests\ChangePasswordRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $user = $request->user();
+            $user->password = Hash::make($data['new_password']);
+            $user->save();
+
+            return response()->respondSuccess([], 'Change password successful.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
+    }
+
+    /**
+     * User edit info api
+     *
+     * @param \App\Http\Requests\EditInfoRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function editInfo(EditInfoRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $user = $request->user();
+            $user->first_name = $data['first_name'];
+            $user->last_name = $data['last_name'];
+            $user->save();
+
+            return response()->respondSuccess([], 'Edit info successful.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
     }
 }

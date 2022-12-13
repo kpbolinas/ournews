@@ -25,4 +25,25 @@ return [
 
     'default_password' => env('DEFAULT_PASSWORD', null),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Article Pagination
+    |--------------------------------------------------------------------------
+    |
+    | Default number of articles per page.
+    |
+    */
+
+    'article_pagination' => env('ARTICLE_PAGINATION', 3),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Comment Pagination
+    |--------------------------------------------------------------------------
+    |
+    | Default number of comments per page.
+    |
+    */
+
+    'comment_pagination' => env('COMMENT_PAGINATION', 3),
 ];

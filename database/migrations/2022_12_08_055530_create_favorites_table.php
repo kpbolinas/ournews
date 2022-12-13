@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('articles_id');
+            $table->foreignId('article_id');
             $table->foreignId('user_id');
             $table->timestamps();
             $table->softDeletes();

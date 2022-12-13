@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources;
 
+use App\Enums\UserRole;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserProfileResource extends JsonResource
+class ProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,6 +16,7 @@ class UserProfileResource extends JsonResource
     public function toArray($request)
     {
         $data = [
+            'id' => $this->id,
             'email' => $this->email,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -22,15 +24,27 @@ class UserProfileResource extends JsonResource
         ];
 
         // Check removed comment mails and compile
-        if ($this->mails->count()) {
+        if ($this->isUserAndHaveMails()) {
             foreach ($this->mails as $mail) {
                 $data['mails'][] = [
                     'id' => $mail->id,
                     'subject' => $mail->subject,
                 ];
             }
+        } else {
+            unset($data['mails']);
         }
 
         return $data;
+    }
+
+    /**
+     * Check if role is user and have mails
+     *
+     * @return bool
+     */
+    public function isUserAndHaveMails(): bool
+    {
+        return $this->mails->count() && $this->role === UserRole::User->value;
     }
 }

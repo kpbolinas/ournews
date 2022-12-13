@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\User\ArticleController;
+use App\Http\Controllers\API\User\CommentController;
 use App\Http\Controllers\API\User\UserController as ReaderController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,12 @@ Route::prefix('/users')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [ReaderController::class, 'profile']);
+        Route::patch('/change-password', [ReaderController::class, 'changePassword']);
+        Route::patch('/edit-info', [ReaderController::class, 'editInfo']);
+        Route::get('/articles/{page?}/{order?}/{date?}', [ArticleController::class, 'index']);
+
+        Route::prefix('/comments')->group(function () {
+            Route::get('/{articleId}/{page?}', [CommentController::class, 'index']);
+        });
     });
 });
