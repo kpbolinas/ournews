@@ -11,6 +11,17 @@ class Comment extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'article_id',
+        'user_id',
+        'content',
+    ];
+
+    /**
      * Relation to the commenter user table.
      */
     public function commenter()
@@ -25,7 +36,7 @@ class Comment extends Model
      * @param array $data
      * @return mixed
      */
-    public function scopeDisplay($query, $data)
+    public function scopeGetList($query, $data)
     {
         return $query
             ->where('article_id', '=', $data['article_id'])

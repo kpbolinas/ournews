@@ -18,7 +18,7 @@ class ArticleController extends Controller
      */
     public function index(int $page = 1, int $order = 1, string $date = null)
     {
-        $articles = Article::published([
+        $articles = Article::getList([
             'page' => $page,
             'order' => $order,
             'date' => $date,

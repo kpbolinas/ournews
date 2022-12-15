@@ -46,4 +46,15 @@ return [
     */
 
     'comment_pagination' => env('COMMENT_PAGINATION', 3),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Mail Pagination
+    |--------------------------------------------------------------------------
+    |
+    | Default number of mails per page.
+    |
+    */
+
+    'mail_pagination' => env('MAIL_PAGINATION', 10),
 ];

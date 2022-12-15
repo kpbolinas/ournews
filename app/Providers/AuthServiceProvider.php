@@ -2,7 +2,14 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Bookmark;
+use App\Models\Comment;
+use App\Models\Favorite;
+use App\Models\CommentRemoveMail;
+use App\Policies\BookmarkPolicy;
+use App\Policies\CommentPolicy;
+use App\Policies\FavoritePolicy;
+use App\Policies\CommentRemoveMailPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +20,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Bookmark::class => BookmarkPolicy::class,
+        Comment::class => CommentPolicy::class,
+        Favorite::class => FavoritePolicy::class,
+        CommentRemoveMail::class => CommentRemoveMailPolicy::class,
     ];
 
     /**

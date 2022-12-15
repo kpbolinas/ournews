@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignId('remover_user_id');
             $table->string('subject');
             $table->text('content');
+            $table->tinyInteger('is_read')
+                ->default(0)
+                ->comment('0 - Unread,1 - Read');
             $table->timestamps();
             $table->softDeletes();
         });

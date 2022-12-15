@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ArticleOrder: int
+enum Order: int
 {
     case Latest = 1;
     case Oldest = 2;

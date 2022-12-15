@@ -52,7 +52,7 @@ class UserController extends Controller
                     ];
                     DB::commit();
 
-                    return response()->respondSuccess($responseData, 'User registered successfully.');
+                    return response()->respondSuccess($responseData, 'User registration successful.');
                 }
                 DB::rollBack();
 
@@ -86,7 +86,7 @@ class UserController extends Controller
                 PersonalAccessToken::where('tokenable_id', $user->id)->delete();
                 $data = ['token' => $user->createToken('OURNews')->plainTextToken];
 
-                return response()->respondSuccess($data, 'User login successfully.');
+                return response()->respondSuccess($data, 'User login successful.');
             }
 
             return response()->respondBadRequest([], 'Invalid email or password. Please try again.');
@@ -110,7 +110,7 @@ class UserController extends Controller
                 $token = PersonalAccessToken::findToken($accessToken);
 
                 if ($token && $token->delete()) {
-                    return response()->respondSuccess([], 'User logout successfully.');
+                    return response()->respondSuccess([], 'User logout successful.');
                 }
             }
 
@@ -145,7 +145,7 @@ class UserController extends Controller
                 switch ($type) {
                     case 'UR': // User Registration
                         $user->activated = UserStatus::Active;
-                        $message = 'User verified successfully.';
+                        $message = 'User verification successful.';
                         break;
 
                     case 'FP': // Forgot Password
@@ -256,7 +256,7 @@ class UserController extends Controller
             $user->last_name = $data['last_name'];
             $user->save();
 
-            return response()->respondSuccess([], 'Edit info successful.');
+            return response()->respondSuccess([], 'Update info successful.');
         } catch (\Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
