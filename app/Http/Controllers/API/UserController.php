@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\User;
+namespace App\Http\Controllers\API;
 
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
@@ -90,7 +90,7 @@ class UserController extends Controller
             }
 
             return response()->respondBadRequest([], 'Invalid email or password. Please try again.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -115,7 +115,7 @@ class UserController extends Controller
             }
 
             return response()->respondBadRequest([], 'Something went wrong.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -163,7 +163,7 @@ class UserController extends Controller
             }
 
             return response()->respondBadRequest([], 'Invalid email or verification token. Please try again.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -202,8 +202,9 @@ class UserController extends Controller
             DB::rollBack();
 
             return response()->respondBadRequest([], 'Something went wrong. Unable to send email.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
+
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -236,7 +237,7 @@ class UserController extends Controller
             $user->save();
 
             return response()->respondSuccess([], 'Change password successful.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -257,7 +258,7 @@ class UserController extends Controller
             $user->save();
 
             return response()->respondSuccess([], 'Update info successful.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
