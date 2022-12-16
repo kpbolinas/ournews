@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookmarkRequest;
-use App\Http\Resources\ArticleResource;
+use App\Http\Resources\User\ArticleResource;
 use App\Models\Bookmark;
 use Illuminate\Http\Request;
 
@@ -23,11 +23,17 @@ class BookmarkController extends Controller
         $user = $request->user();
         $bookmarks = Bookmark::getList([
             'user' => $user,
-            'page' => $page,
             'order' => $order,
-        ])->map(function ($bookmark) {
-            return $bookmark->article;
-        });
+        ])
+            ->paginate(
+                config('custom.article_pagination'),
+                ['bookmarks.*'],
+                'page',
+                $page
+            )
+            ->map(function ($bookmark) {
+                return $bookmark->article;
+            });
         $response = ArticleResource::collection($bookmarks);
 
         return response()->respondSuccess($response, 'Okay.');

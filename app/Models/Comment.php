@@ -33,14 +33,13 @@ class Comment extends Model
      * Scope a query to get comments to display for an article
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $data
+     * @param integer $articleId
      * @return mixed
      */
-    public function scopeGetList($query, $data)
+    public function scopeGetList($query, $articleId)
     {
         return $query
-            ->where('article_id', '=', $data['article_id'])
-            ->latest()
-            ->paginate(config('custom.comment_pagination'), ['*'], 'page', $data['page']);
+            ->where('article_id', '=', $articleId)
+            ->latest();
     }
 }

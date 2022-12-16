@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Reporter;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MailListResource extends JsonResource
+class ArticleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +17,8 @@ class MailListResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'subject' => $this->subject,
-            'is_read' => $this->is_read,
+            'title' => $this->title,
+            'updated_at' => Carbon::parse($this->updated_at)->rawFormat('Y-m-d H:i'),
         ];
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API\User;
 
 use App\Enums\MailStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MailDetailResource;
-use App\Http\Resources\MailListResource;
+use App\Http\Resources\User\MailDetailResource;
+use App\Http\Resources\User\MailListResource;
 use App\Models\CommentRemoveMail;
 use Illuminate\Http\Request;
 
@@ -21,10 +21,13 @@ class CommentRemoveMailController extends Controller
     public function index(Request $request, int $page = 1)
     {
         $user = $request->user();
-        $mails = CommentRemoveMail::getList([
-            'user' => $user,
-            'page' => $page,
-        ]);
+        $mails = CommentRemoveMail::getList($user)
+            ->paginate(
+                config('custom.mail_pagination'),
+                ['comment_remove_mails.*'],
+                'page',
+                $page
+            );
         $response = MailListResource::collection($mails);
 
         return response()->respondSuccess($response, 'Okay.');

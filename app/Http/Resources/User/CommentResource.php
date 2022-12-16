@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MailDetailResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,11 @@ class MailDetailResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'subject' => $this->subject,
+            'id' => $this->id,
             'content' => $this->content,
-            'created_at' => Carbon::parse($this->created_at)->rawFormat('M d, Y h:i A'),
+            'first_name' => $this->commenter->first_name,
+            'last_name' => $this->commenter->last_name,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
         ];
     }
 }

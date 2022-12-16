@@ -40,7 +40,7 @@ class Bookmark extends Model
     {
         $query = $query
             ->whereHas('article', function ($query) {
-                $query->isPublished();
+                $query->published();
             })
             ->where('bookmarks.user_id', '=', $data['user']->id);
 
@@ -59,8 +59,6 @@ class Bookmark extends Model
                     break;
             }
         }
-
-        $query = $query->paginate(config('custom.article_pagination'), ['*'], 'page', $data['page']);
 
         return $query;
     }

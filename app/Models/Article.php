@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\Order;
 use App\Enums\ArticleStatus;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +12,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Article extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'reporter_user_id',
+        'title',
+        'content',
+        'photo',
+        'status',
+    ];
 
     /**
      * Relation to the reporter user table.
@@ -58,9 +70,26 @@ class Article extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeIsPublished($query)
+    public function scopePublished($query)
     {
         return $query->where('articles.status', '=', ArticleStatus::Published->value);
+    }
+
+    /**
+     * Scope a query to get unplublished articles for the reporters
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeReporterUnpublished($query)
+    {
+        return $query->whereIn(
+            'articles.status',
+            [
+                ArticleStatus::Draft->value,
+                ArticleStatus::ForRevision->value,
+            ]
+        );
     }
 
     /**
@@ -72,8 +101,6 @@ class Article extends Model
      */
     public function scopeGetList($query, $data)
     {
-        $query = $this->isPublished();
-
         if ($data['date']) {
             $publishDate = Carbon::parse($data['date']);
             $start = $publishDate->toDateString() . ' 00:00:00';
@@ -96,8 +123,6 @@ class Article extends Model
                     break;
             }
         }
-
-        $query = $query->paginate(config('custom.article_pagination'), ['*'], 'page', $data['page']);
 
         return $query;
     }

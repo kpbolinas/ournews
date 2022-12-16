@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\Reporter\ArticleController as ReporterArticleController;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\User\ArticleController;
+use App\Http\Controllers\API\User\ArticleController as ReaderArticleController;
 use App\Http\Controllers\API\User\BookmarkController;
 use App\Http\Controllers\API\User\CommentController;
 use App\Http\Controllers\API\User\CommentRemoveMailController;
@@ -35,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // API routes for users or readers
 Route::prefix('/users')->middleware('auth:sanctum')->group(function () {
-    Route::get('/articles/{page?}/{order?}/{date?}', [ArticleController::class, 'index']);
+    Route::get('/articles/{page?}/{order?}/{date?}', [ReaderArticleController::class, 'index']);
 
     Route::prefix('/comments')->group(function () {
         Route::get('/{articleId}/{page?}', [CommentController::class, 'index']);
@@ -65,4 +66,10 @@ Route::prefix('/users')->middleware('auth:sanctum')->group(function () {
 
 // API routes for reporters
 Route::prefix('/reporters')->middleware('auth:sanctum')->group(function () {
+    Route::prefix('/articles')->group(function () {
+        Route::get('/unpublished/{page?}/{order?}/{date?}', [ReporterArticleController::class, 'unpublished']);
+        Route::post('/', [ReporterArticleController::class, 'create']);
+    });
+    Route::prefix('/comments')->group(function () {
+    });
 });

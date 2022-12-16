@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class MailListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +16,8 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'content' => $this->content,
-            'first_name' => $this->commenter->first_name,
-            'last_name' => $this->commenter->last_name,
-            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'subject' => $this->subject,
+            'is_read' => $this->is_read,
         ];
     }
 }

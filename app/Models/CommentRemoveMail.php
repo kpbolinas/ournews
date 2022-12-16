@@ -28,14 +28,13 @@ class CommentRemoveMail extends Model
      * Scope a query to get comments to display for an article
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $data
+     * @param \App\Models\User $user
      * @return mixed
      */
-    public function scopeGetList($query, $data)
+    public function scopeGetList($query, User $user)
     {
         return $query
-            ->where('comment_remove_mails.commenter_user_id', '=', $data['user']->id)
-            ->latest('comment_remove_mails.created_at')
-            ->paginate(config('custom.mail_pagination'), ['*'], 'page', $data['page']);
+            ->where('comment_remove_mails.commenter_user_id', '=', $user->id)
+            ->latest('comment_remove_mails.created_at');
     }
 }

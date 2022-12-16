@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FavoriteRequest;
-use App\Http\Resources\ArticleResource;
+use App\Http\Resources\User\ArticleResource;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 
@@ -23,11 +23,17 @@ class FavoriteController extends Controller
         $user = $request->user();
         $favorites = Favorite::getList([
             'user' => $user,
-            'page' => $page,
             'order' => $order,
-        ])->map(function ($favorite) {
-            return $favorite->article;
-        });
+        ])
+            ->paginate(
+                config('custom.article_pagination'),
+                ['favorites.*'],
+                'page',
+                $page
+            )
+            ->map(function ($favorite) {
+                return $favorite->article;
+            });
         $response = ArticleResource::collection($favorites);
 
         return response()->respondSuccess($response, 'Okay.');

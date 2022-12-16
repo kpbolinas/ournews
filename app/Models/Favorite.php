@@ -40,7 +40,7 @@ class Favorite extends Model
     {
         $query = $query
             ->whereHas('article', function ($query) {
-                $query->isPublished();
+                $query->published();
             })
             ->where('favorites.user_id', '=', $data['user']->id);
 
@@ -59,8 +59,6 @@ class Favorite extends Model
                     break;
             }
         }
-
-        $query = $query->paginate(config('custom.article_pagination'), ['*'], 'page', $data['page']);
 
         return $query;
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
-use App\Http\Resources\CommentResource;
+use App\Http\Resources\User\CommentResource;
 use App\Models\Comment;
 
 class CommentController extends Controller
@@ -18,10 +18,13 @@ class CommentController extends Controller
      */
     public function index(int $articleId, int $page = 1)
     {
-        $comments = Comment::getList([
-            'article_id' => $articleId,
-            'page' => $page,
-        ]);
+        $comments = Comment::getList($articleId)
+            ->paginate(
+                config('custom.comment_pagination'),
+                ['comments.*'],
+                'page',
+                $page
+            );
         $response = CommentResource::collection($comments);
 
         return response()->respondSuccess($response, 'Okay.');
