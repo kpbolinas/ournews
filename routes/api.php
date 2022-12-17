@@ -69,6 +69,7 @@ Route::prefix('/reporters')->middleware('auth:sanctum')->group(function () {
     Route::prefix('/articles')->group(function () {
         Route::get('/unpublished/{page?}/{order?}/{date?}', [ReporterArticleController::class, 'unpublished']);
         Route::post('/', [ReporterArticleController::class, 'create']);
+        Route::patch('/{article}', [ReporterArticleController::class, 'update']);
     });
     Route::prefix('/comments')->group(function () {
     });

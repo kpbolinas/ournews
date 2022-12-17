@@ -53,4 +53,28 @@ class ArticleController extends Controller
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
+
+    /**
+     * Article update api
+     *
+     * @param \App\Http\Requests\ArticleRequest $request
+     * @param \App\Models\Article $article
+     * @return \Illuminate\Http\Response
+     */
+    public function update(ArticleRequest $request, Article $article)
+    {
+        try {
+            $this->authorize('update', $article);
+            $data = $request->validated();
+            $article->title = $data['title'];
+            $article->content = $data['content'];
+            $article->photo = $data['photo'] ?: null;
+            $article->status = $data['status'];
+            $article->save();
+
+            return response()->respondSuccess([], 'Article updated successfully.');
+        } catch (\Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
+    }
 }

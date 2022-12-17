@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Article;
 use App\Models\Bookmark;
 use App\Models\Comment;
 use App\Models\Favorite;
 use App\Models\CommentRemoveMail;
+use App\Policies\ArticlePolicy;
 use App\Policies\BookmarkPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\FavoritePolicy;
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
+        Article::class => ArticlePolicy::class,
         Bookmark::class => BookmarkPolicy::class,
         Comment::class => CommentPolicy::class,
         Favorite::class => FavoritePolicy::class,
