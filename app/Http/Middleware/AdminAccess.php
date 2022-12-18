@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 
-class ValidateApiToken
+class AdminAccess
 {
     /**
      * Handle an incoming request.
@@ -16,14 +17,15 @@ class ValidateApiToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->hasHeader('X-Api-Token')) {
-            abort(401, 'Unauthorized Access');
-        }
 
-        $apiToken = $request->header('X-Api-Token');
-
-        if ($apiToken !== config('custom.api_token')) {
-            abort(401, 'Unauthorized Access');
+        if (!in_array(
+            $request->user()->role,
+            [
+                UserRole::Admin->value,
+                UserRole::SuperAdmin->value
+            ]
+        )) {
+            abort(403, 'Access Denied (Forbidden)');
         }
 
         return $next($request);

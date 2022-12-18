@@ -19,7 +19,7 @@ class Article extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'reporter_user_id',
+        'user_id',
         'title',
         'content',
         'photo',
@@ -31,7 +31,7 @@ class Article extends Model
      */
     public function reporter()
     {
-        return $this->belongsTo(User::class, 'reporter_user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

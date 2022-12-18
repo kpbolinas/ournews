@@ -65,11 +65,13 @@ Route::prefix('/users')->middleware('auth:sanctum')->group(function () {
 });
 
 // API routes for reporters
-Route::prefix('/reporters')->middleware('auth:sanctum')->group(function () {
+Route::prefix('/reporters')->middleware(['auth:sanctum', 'reporter.access'])->group(function () {
     Route::prefix('/articles')->group(function () {
         Route::get('/unpublished/{page?}/{order?}/{date?}', [ReporterArticleController::class, 'unpublished']);
         Route::post('/', [ReporterArticleController::class, 'create']);
         Route::patch('/{article}', [ReporterArticleController::class, 'update']);
+        Route::delete('/{article}', [ReporterArticleController::class, 'delete']);
+        Route::get('/notes/{article}', [ReporterArticleController::class, 'notes']);
     });
     Route::prefix('/comments')->group(function () {
     });

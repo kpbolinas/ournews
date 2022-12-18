@@ -11,6 +11,18 @@ class ArticlePolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function view(User $user, Article $article)
+    {
+        return $user->id === $article->user_id;
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
@@ -19,7 +31,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article)
     {
-        return $user->id === $article->reporter_user_id;
+        return $user->id === $article->user_id;
     }
 
     /**
@@ -31,6 +43,6 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article)
     {
-        return $user->id === $article->reporter_user_id;
+        return $user->id === $article->user_id;
     }
 }
