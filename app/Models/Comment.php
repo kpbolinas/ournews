@@ -22,6 +22,14 @@ class Comment extends Model
     ];
 
     /**
+     * Relation to the article table.
+     */
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'article_id');
+    }
+
+    /**
      * Relation to the commenter user table.
      */
     public function commenter()

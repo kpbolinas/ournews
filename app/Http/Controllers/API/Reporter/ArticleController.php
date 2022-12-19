@@ -6,7 +6,8 @@ use App\Enums\ArticleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
 use App\Http\Resources\Reporter\ArticleNoteResource;
-use App\Http\Resources\Reporter\ArticleResource;
+use App\Http\Resources\Reporter\ArticlePublishedResource;
+use App\Http\Resources\Reporter\ArticleUnpublishedResource;
 use App\Models\Article;
 
 class ArticleController extends Controller
@@ -32,7 +33,7 @@ class ArticleController extends Controller
                 'page',
                 $page
             );
-        $response = ArticleResource::collection($articles);
+        $response = ArticleUnpublishedResource::collection($articles);
 
         return response()->respondSuccess($response, 'Okay.');
     }
@@ -125,6 +126,32 @@ class ArticleController extends Controller
                 ->respondBadRequest([], 'Article should be under For Revision status.');
         }
         $response = new ArticleNoteResource($article);
+
+        return response()->respondSuccess($response, 'Okay.');
+    }
+
+    /**
+     * Article published api
+     *
+     * @param integer $page
+     * @param integer $order
+     * @param string $date
+     * @return \Illuminate\Http\Response
+     */
+    public function published(int $page = 1, int $order = 1, string $date = null)
+    {
+        $articles = Article::published()
+            ->getList([
+                'order' => $order,
+                'date' => $date,
+            ])
+            ->paginate(
+                config('custom.article_pagination'),
+                ['articles.*'],
+                'page',
+                $page
+            );
+        $response = ArticlePublishedResource::collection($articles);
 
         return response()->respondSuccess($response, 'Okay.');
     }

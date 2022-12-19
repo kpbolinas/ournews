@@ -24,7 +24,7 @@ class ArticleController extends Controller
                 'date' => $date,
             ])
             ->paginate(
-                config('custom.article_pagination'),
+                config('custom.article_user_pagination'),
                 ['articles.*'],
                 'page',
                 $page

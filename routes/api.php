@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\API\Reporter\ArticleController as ReporterArticleController;
+use App\Http\Controllers\API\Reporter\CommentController as ReporterCommentController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\User\ArticleController as ReaderArticleController;
 use App\Http\Controllers\API\User\BookmarkController;
-use App\Http\Controllers\API\User\CommentController;
+use App\Http\Controllers\API\User\CommentController as ReaderCommentController;
 use App\Http\Controllers\API\User\CommentRemoveMailController;
 use App\Http\Controllers\API\User\FavoriteController;
 use Illuminate\Support\Facades\Route;
@@ -39,10 +40,10 @@ Route::prefix('/users')->middleware('auth:sanctum')->group(function () {
     Route::get('/articles/{page?}/{order?}/{date?}', [ReaderArticleController::class, 'index']);
 
     Route::prefix('/comments')->group(function () {
-        Route::get('/{articleId}/{page?}', [CommentController::class, 'index']);
-        Route::post('/', [CommentController::class, 'create']);
-        Route::patch('/{comment}', [CommentController::class, 'update']);
-        Route::delete('/{comment}', [CommentController::class, 'delete']);
+        Route::get('/{article}/{page?}', [ReaderCommentController::class, 'index']);
+        Route::post('/', [ReaderCommentController::class, 'create']);
+        Route::patch('/{comment}', [ReaderCommentController::class, 'update']);
+        Route::delete('/{comment}', [ReaderCommentController::class, 'delete']);
     });
 
     Route::prefix('/bookmarks')->group(function () {
@@ -72,7 +73,10 @@ Route::prefix('/reporters')->middleware(['auth:sanctum', 'reporter.access'])->gr
         Route::patch('/{article}', [ReporterArticleController::class, 'update']);
         Route::delete('/{article}', [ReporterArticleController::class, 'delete']);
         Route::get('/notes/{article}', [ReporterArticleController::class, 'notes']);
+        Route::get('/published/{page?}/{order?}/{date?}', [ReporterArticleController::class, 'published']);
     });
     Route::prefix('/comments')->group(function () {
+        Route::get('/{article}/{page?}', [ReporterCommentController::class, 'index']);
+        Route::delete('/{comment}', [ReporterCommentController::class, 'delete']);
     });
 });

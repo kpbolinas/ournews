@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\API\User;
 
+use App\Enums\ArticleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
+use App\Http\Resources\User\ArticleDetailResource;
 use App\Http\Resources\User\CommentResource;
+use App\Models\Article;
 use App\Models\Comment;
 
 class CommentController extends Controller
@@ -12,20 +15,27 @@ class CommentController extends Controller
     /**
      * Comments list api
      *
-     * @param integer $articleId
+     * @param \App\Models\Article $article
      * @param integer $page
      * @return \Illuminate\Http\Response
      */
-    public function index(int $articleId, int $page = 1)
+    public function index(Article $article, int $page = 1)
     {
-        $comments = Comment::getList($articleId)
+        if ($article->status !== ArticleStatus::Published->value) {
+            return response()
+                ->respondBadRequest([], 'Article should be under Published status.');
+        }
+        $comments = Comment::getList($article->id)
             ->paginate(
                 config('custom.comment_pagination'),
                 ['comments.*'],
                 'page',
                 $page
             );
-        $response = CommentResource::collection($comments);
+        $response = [
+            'article' => new ArticleDetailResource($article),
+            'comments' => CommentResource::collection($comments),
+        ];
 
         return response()->respondSuccess($response, 'Okay.');
     }

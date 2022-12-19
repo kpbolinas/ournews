@@ -27,14 +27,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Article Pagination
+    | Default Article Pagination for Users or Readers
     |--------------------------------------------------------------------------
     |
     | Default number of articles per page.
     |
     */
 
-    'article_pagination' => env('ARTICLE_PAGINATION', 3),
+    'article_user_pagination' => env('ARTICLE_USER_PAGINATION', 3),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,4 +57,15 @@ return [
     */
 
     'mail_pagination' => env('MAIL_PAGINATION', 10),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Article Pagination for Reporters and Moderators
+    |--------------------------------------------------------------------------
+    |
+    | Default number of articles per page.
+    |
+    */
+
+    'article_pagination' => env('ARTICLE_PAGINATION', 10),
 ];

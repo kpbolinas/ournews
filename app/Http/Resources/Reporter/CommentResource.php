@@ -5,7 +5,7 @@ namespace App\Http\Resources\Reporter;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ArticleResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,10 @@ class ArticleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'updated_at' => Carbon::parse($this->updated_at)->rawFormat('Y-m-d H:i'),
+            'content' => $this->content,
+            'first_name' => $this->commenter->first_name,
+            'last_name' => $this->commenter->last_name,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
         ];
     }
 }
