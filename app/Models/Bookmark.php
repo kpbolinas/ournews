@@ -46,14 +46,11 @@ class Bookmark extends Model
 
         if ($data['order']) {
             switch ($data['order']) {
-                case Order::Latest->value:
-                    $query = $query->latest('bookmarks.created_at');
-                    break;
-
                 case Order::Oldest->value:
                     $query = $query->oldest('bookmarks.created_at');
                     break;
 
+                case Order::Latest->value:
                 default:
                     $query = $query->latest('bookmarks.created_at');
                     break;

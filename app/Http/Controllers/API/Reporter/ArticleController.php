@@ -25,7 +25,7 @@ class ArticleController extends Controller
         $articles = Article::reporterUnpublished()
             ->getList([
                 'order' => $order,
-                'date' => $date,
+                'date' => $date ? ['field' => 'updated_at', 'value' => $date] : null,
             ])
             ->paginate(
                 config('custom.article_pagination'),
@@ -143,7 +143,7 @@ class ArticleController extends Controller
         $articles = Article::published()
             ->getList([
                 'order' => $order,
-                'date' => $date,
+                'date' => $date ? ['field' => 'publish_date', 'value' => $date] : null,
             ])
             ->paginate(
                 config('custom.article_pagination'),

@@ -102,22 +102,19 @@ class Article extends Model
     public function scopeGetList($query, $data)
     {
         if ($data['date']) {
-            $publishDate = Carbon::parse($data['date']);
-            $start = $publishDate->toDateString() . ' 00:00:00';
-            $end = $publishDate->toDateString() . ' 23:59:59';
-            $query = $query->whereBetween('articles.publish_date', [$start, $end]);
+            $date = Carbon::parse($data['date']['value']);
+            $start = $date->toDateString() . ' 00:00:00';
+            $end = $date->toDateString() . ' 23:59:59';
+            $query = $query->whereBetween('articles.' . $data['date']['field'], [$start, $end]);
         }
 
         if ($data['order']) {
             switch ($data['order']) {
-                case Order::Latest->value:
-                    $query = $query->latest('articles.created_at');
-                    break;
-
                 case Order::Oldest->value:
                     $query = $query->oldest('articles.created_at');
                     break;
 
+                case Order::Latest->value:
                 default:
                     $query = $query->latest('articles.created_at');
                     break;

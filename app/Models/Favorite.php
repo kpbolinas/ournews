@@ -46,14 +46,11 @@ class Favorite extends Model
 
         if ($data['order']) {
             switch ($data['order']) {
-                case Order::Latest->value:
-                    $query = $query->latest('favorites.created_at');
-                    break;
-
                 case Order::Oldest->value:
                     $query = $query->oldest('favorites.created_at');
                     break;
 
+                case Order::Latest->value:
                 default:
                     $query = $query->latest('favorites.created_at');
                     break;

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\EditInfoRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\VerificationRequest;
 use App\Http\Resources\ProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * User login api
+     * Login api
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -86,7 +87,7 @@ class UserController extends Controller
                 PersonalAccessToken::where('tokenable_id', $user->id)->delete();
                 $data = ['token' => $user->createToken('OURNews')->plainTextToken];
 
-                return response()->respondSuccess($data, 'User login successful.');
+                return response()->respondSuccess($data, 'Login successful.');
             }
 
             return response()->respondBadRequest([], 'Invalid email or password. Please try again.');
@@ -96,7 +97,7 @@ class UserController extends Controller
     }
 
     /**
-     * User logout api
+     * Logout api
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -110,7 +111,7 @@ class UserController extends Controller
                 $token = PersonalAccessToken::findToken($accessToken);
 
                 if ($token && $token->delete()) {
-                    return response()->respondSuccess([], 'User logout successful.');
+                    return response()->respondSuccess([], 'Logout successful.');
                 }
             }
 
@@ -123,10 +124,10 @@ class UserController extends Controller
     /**
      * User verification api
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\VerificationRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function verification(Request $request)
+    public function verification(VerificationRequest $request)
     {
         try {
             $user = User::where(
@@ -145,12 +146,12 @@ class UserController extends Controller
                 switch ($type) {
                     case 'UR': // User Registration
                         $user->activated = UserStatus::Active;
-                        $message = 'User verification successful.';
+                        $message = 'Verification successful.';
                         break;
 
                     case 'FP': // Forgot Password
                         $user->password = Hash::make(config('custom.default_password'));
-                        $message = 'User password reset successful.';
+                        $message = 'Password reset successful.';
                         break;
 
                     default:
