@@ -68,4 +68,15 @@ return [
     */
 
     'article_pagination' => env('ARTICLE_PAGINATION', 10),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Member Pagination for Admins
+    |--------------------------------------------------------------------------
+    |
+    | Default number of members per page.
+    |
+    */
+
+    'member_pagination' => env('MEMBER_PAGINATION', 10),
 ];

@@ -93,6 +93,28 @@ class Article extends Model
     }
 
     /**
+     * Scope a query to get unplublished articles for the moderators
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeModeratorUnpublished($query)
+    {
+        return $query->where('articles.status', '=', ArticleStatus::ForApproval->value);
+    }
+
+    /**
+     * Scope a query to get archived articles
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeArchived($query)
+    {
+        return $query->where('articles.status', '=', ArticleStatus::Archived->value);
+    }
+
+    /**
      * Scope a query to get articles
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
