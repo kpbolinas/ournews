@@ -7,9 +7,13 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberRequest;
 use App\Http\Resources\Admin\MemberResource;
+use App\Mail\NewMemberNotification;
+use App\Mail\TemporaryPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Throwable;
 
 class UserController extends Controller
@@ -51,13 +55,21 @@ class UserController extends Controller
 
         try {
             $data = $request->validated();
-            $data['password'] = Hash::make(config('custom.default_password'));
+            $tempPass = Str::random(10);
+            $data['password'] = Hash::make($tempPass);
             $data['activated'] = UserStatus::Active;
             $user = User::create($data);
 
             if ($user) {
-                //TO DO - send mail about the password
-                $mail = true;
+                $to = (object) [
+                    'email' => $user->email,
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                ];
+                $mailData = [
+                    'email' => $user->email,
+                    'temporary_password' => $tempPass,
+                ];
+                $mail = Mail::to($to)->send(new NewMemberNotification($mailData));
 
                 if ($mail) {
                     DB::commit();
@@ -66,7 +78,7 @@ class UserController extends Controller
                 }
                 DB::rollBack();
 
-                return response()->respondBadRequest([], 'Failed to create member. Unable to send email.');
+                return response()->respondBadRequest([], 'Unable to send email.');
             }
             DB::rollBack();
 
@@ -86,16 +98,41 @@ class UserController extends Controller
      */
     public function resetPassword(User $user)
     {
+        DB::beginTransaction();
+
         try {
             if (in_array($user->role, [UserRole::SuperAdmin->value, UserRole::User])) {
                 return response()
                     ->respondBadRequest([], 'Member should be a Reporter, Moderator or an Admin only.');
             }
-            $user->password = Hash::make(config('custom.default_password'));
-            $user->save();
+            $tempPass = Str::random(10);
+            $user->password = Hash::make($tempPass);
+            if ($user->save()) {
+                $to = (object) [
+                    'email' => $user->email,
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                ];
+                $mailData = [
+                    'email' => $user->email,
+                    'temporary_password' => $tempPass,
+                ];
+                $mail = Mail::to($to)->send(new TemporaryPassword($mailData));
 
-            return response()->respondSuccess([], 'Member reset password successful.');
+                if ($mail) {
+                    DB::commit();
+
+                    return response()->respondSuccess([], 'Member reset password successful.');
+                }
+                DB::rollBack();
+
+                return response()->respondBadRequest([], 'Unable to send email.');
+            }
+            DB::rollBack();
+
+            return response()->respondBadRequest([], 'Unable to save temporary password.');
         } catch (\Throwable $th) {
+            DB::rollBack();
+
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }

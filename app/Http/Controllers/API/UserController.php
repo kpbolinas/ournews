@@ -10,11 +10,15 @@ use App\Http\Requests\EditInfoRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\VerificationRequest;
 use App\Http\Resources\ProfileResource;
+use App\Mail\ForgotPasswordVerification;
+use App\Mail\RegistrationVerification;
+use App\Mail\TemporaryPassword;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 use Throwable;
@@ -43,17 +47,20 @@ class UserController extends Controller
             $user = User::create($data);
 
             if ($user) {
-                //TO DO - send mail
-                $mail = true;
+                $to = (object) [
+                    'email' => $data['email'],
+                    'name' => $data['first_name'] . ' ' . $data['last_name'],
+                ];
+                $mailData = [
+                    'email' => $data['email'],
+                    'verification_token' => $vtoken,
+                ];
+                $mail = Mail::to($to)->send(new RegistrationVerification($mailData));
 
                 if ($mail) {
-                    $responseData = [
-                        'first_name' => $data['first_name'],
-                        'verification_token' => $vtoken,
-                    ];
                     DB::commit();
 
-                    return response()->respondSuccess($responseData, 'User registration successful.');
+                    return response()->respondSuccess([], 'User registration successful.');
                 }
                 DB::rollBack();
 
@@ -129,6 +136,8 @@ class UserController extends Controller
      */
     public function verification(VerificationRequest $request)
     {
+        DB::beginTransaction();
+
         try {
             $user = User::where(
                 [
@@ -146,25 +155,43 @@ class UserController extends Controller
                 switch ($type) {
                     case 'UR': // User Registration
                         $user->activated = UserStatus::Active;
-                        $message = 'Verification successful.';
-                        break;
+                        $user->save();
 
+                        return response()->respondSuccess([], 'Verification successful.');
                     case 'FP': // Forgot Password
-                        $user->password = Hash::make(config('custom.default_password'));
-                        $message = 'Password reset successful.';
-                        break;
+                        $tempPass = Str::random(10);
+                        $user->password = Hash::make($tempPass);
+                        if ($user->save()) {
+                            $to = (object) [
+                                'email' => $user->email,
+                                'name' => $user->first_name . ' ' . $user->last_name,
+                            ];
+                            $mailData = [
+                                'email' => $user->email,
+                                'temporary_password' => $tempPass,
+                            ];
+                            $mail = Mail::to($to)->send(new TemporaryPassword($mailData));
 
-                    default:
-                        # code...
-                        break;
+                            if ($mail) {
+                                DB::commit();
+
+                                return response()->respondSuccess([], 'Password reset successful.');
+                            }
+                            DB::rollBack();
+
+                            return response()->respondBadRequest([], 'Unable to send email.');
+                        }
+                        DB::rollBack();
+
+                        return response()->respondBadRequest([], 'Unable to save temporary password.');
                 }
-                $user->save();
-
-                return response()->respondSuccess([], $message);
             }
+            DB::rollBack();
 
             return response()->respondBadRequest([], 'Invalid email or verification token. Please try again.');
         } catch (Throwable $th) {
+            DB::rollBack();
+
             return response()->respondInternalServerError([], $th->getMessage());
         }
     }
@@ -187,13 +214,20 @@ class UserController extends Controller
                 $user->verification_token = $vtoken;
 
                 if ($user->save()) {
-                    // TO DO - Send mail
-                    $mail = true;
+                    $to = (object) [
+                        'email' => $user->email,
+                        'name' => $user->first_name . ' ' . $user->last_name,
+                    ];
+                    $mailData = [
+                        'email' => $user->email,
+                        'verification_token' => $vtoken,
+                    ];
+                    $mail = Mail::to($to)->send(new ForgotPasswordVerification($mailData));
 
                     if ($mail) {
                         DB::commit();
 
-                        return response()->respondSuccess(['token' => $vtoken], 'Email sent.');
+                        return response()->respondSuccess([], 'Email sent.');
                     }
                 }
                 DB::rollBack();
