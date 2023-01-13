@@ -26,12 +26,13 @@ use Illuminate\Support\Facades\Route;
 // Common API routes
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
 Route::post('/verification', [UserController::class, 'verification']);
 Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 
 // Common API routes requiring auth
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/validate-token', [UserController::class, 'validateAuthToken']);
+    Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/profile', [UserController::class, 'profile']);
     Route::patch('/change-password', [UserController::class, 'changePassword']);
     Route::patch('/edit-info', [UserController::class, 'editInfo']);
@@ -79,13 +80,14 @@ Route::prefix('/reporters')->middleware(['auth:sanctum', 'reporter.access'])->gr
     });
     Route::prefix('/comments')->group(function () {
         Route::get('/{article}/{page?}', [ReporterCommentController::class, 'index']);
-        Route::delete('/{comment}', [ReporterCommentController::class, 'delete']);
+        Route::patch('/{comment}', [ReporterCommentController::class, 'delete']);
     });
 });
 
 // API routes for moderators or managers
 Route::prefix('/moderators')->middleware(['auth:sanctum', 'moderator.access'])->group(function () {
     Route::prefix('/articles')->group(function () {
+        Route::get('/{article}', [ModeratorArticleController::class, 'detail']);
         Route::get('/unpublished/{page?}/{order?}/{date?}', [ModeratorArticleController::class, 'unpublished']);
         Route::patch('/publish/{article}', [ModeratorArticleController::class, 'publish']);
         Route::patch('/revise/{article}', [ModeratorArticleController::class, 'revise']);

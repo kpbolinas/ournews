@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Moderator;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class ArticleDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,9 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
             'content' => $this->content,
-            'first_name' => $this->commenter->first_name,
-            'last_name' => $this->commenter->last_name,
-            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
+            'photo' => $this->photo,
         ];
     }
 }

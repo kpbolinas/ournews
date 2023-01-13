@@ -67,9 +67,11 @@ class User extends Authenticatable
     {
         if ($data['keyword']) {
             $keyword = '%' . $data['keyword'] . '%';
-            $query = $query->where('users.email', 'like', $keyword)
-                ->orWhere('users.first_name', 'like', $keyword)
-                ->orWhere('users.last_name', 'like', $keyword);
+            $query = $query->where(function ($query) use ($keyword) {
+                $query->where('users.email', 'like', $keyword)
+                    ->orWhere('users.first_name', 'like', $keyword)
+                    ->orWhere('users.last_name', 'like', $keyword);
+            });
         }
 
         switch ($data['role']) {

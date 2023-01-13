@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API\Moderator;
 use App\Enums\ArticleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleReviseRequest;
+use App\Http\Resources\Moderator\ArticleDetailResource;
 use App\Http\Resources\Reporter\ArticlePublishedResource;
 use App\Http\Resources\Reporter\ArticleUnpublishedResource;
 use App\Models\Article;
+use Carbon\Carbon;
 
 class ArticleController extends Controller
 {
@@ -34,6 +36,24 @@ class ArticleController extends Controller
             );
         $response = ArticleUnpublishedResource::collection($articles);
 
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
+    }
+
+    /**
+     * Article detail api
+     *
+     * @param \App\Models\Article $article
+     * @return \Illuminate\Http\Response
+     */
+    public function detail(Article $article)
+    {
+        if ($article->status !== ArticleStatus::ForApproval->value) {
+            return response()
+                ->respondBadRequest([], 'Article should be under For Approval status.');
+        }
+
+        $response = new ArticleDetailResource($article);
+
         return response()->respondSuccess($response, 'Okay.');
     }
 
@@ -50,6 +70,7 @@ class ArticleController extends Controller
                 return response()
                     ->respondBadRequest([], 'Article should be under For Approval status.');
             }
+            $article->publish_date = Carbon::now();
             $article->status = ArticleStatus::Published->value;
             $article->save();
 
@@ -129,7 +150,7 @@ class ArticleController extends Controller
             );
         $response = ArticlePublishedResource::collection($articles);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
     }
 
     /**
@@ -177,7 +198,7 @@ class ArticleController extends Controller
             );
         $response = ArticleUnpublishedResource::collection($articles);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
     }
 
     /**

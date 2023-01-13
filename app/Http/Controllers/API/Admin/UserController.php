@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function index(int $page = 1, int $role = null, string $keyword = null)
     {
-        $articles = User::getList([
+        $people = User::getList([
             'role' => $role,
             'keyword' => $keyword,
         ])
@@ -38,9 +38,9 @@ class UserController extends Controller
                 'page',
                 $page
             );
-        $response = MemberResource::collection($articles);
+        $response = MemberResource::collection($people);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['people' => $response, 'last_page' => $people->lastPage()], 'Okay.');
     }
 
     /**

@@ -35,6 +35,7 @@ class CommentController extends Controller
         $response = [
             'article' => new ArticleDetailResource($article),
             'comments' => CommentResource::collection($comments),
+            'last_page' => $comments->lastPage(),
         ];
 
         return response()->respondSuccess($response, 'Okay.');

@@ -7,6 +7,7 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\EditInfoRequest;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\VerificationRequest;
 use App\Http\Resources\ProfileResource;
@@ -92,7 +93,10 @@ class UserController extends Controller
             ])) {
                 $user = $request->user();
                 PersonalAccessToken::where('tokenable_id', $user->id)->delete();
-                $data = ['token' => $user->createToken('OURNews')->plainTextToken];
+                $data = [
+                    'token' => $user->createToken('OURNews')->plainTextToken,
+                    'role' => $user->role,
+                ];
 
                 return response()->respondSuccess($data, 'Login successful.');
             }
@@ -199,10 +203,10 @@ class UserController extends Controller
     /**
      * User forgot password api
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\ForgotPasswordRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function forgotPassword(Request $request)
+    public function forgotPassword(ForgotPasswordRequest $request)
     {
         DB::beginTransaction();
 
@@ -293,6 +297,33 @@ class UserController extends Controller
             $user->save();
 
             return response()->respondSuccess([], 'Update info successful.');
+        } catch (Throwable $th) {
+            return response()->respondInternalServerError([], $th->getMessage());
+        }
+    }
+
+    /**
+     * Validate auth token api
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function validateAuthToken(Request $request)
+    {
+        try {
+            $accessToken = $request->bearerToken();
+
+            if (!$accessToken) {
+                return response()->respondUnauthorized('Unauthorized Access');
+            }
+
+            $token = PersonalAccessToken::findToken($accessToken);
+
+            if (!$token) {
+                return response()->respondUnauthorized('Unauthorized Access');
+            }
+
+            return response()->respondSuccess([], 'Authorization token is valid.');
         } catch (Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }
