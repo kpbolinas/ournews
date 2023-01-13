@@ -1,0 +1,11 @@
+.profile-wrapper {
+    border: solid 0.1px #9D1919;
+}
+
+.info-wrapper > div {
+    margin: 5px 0;
+}
+
+.info-label {
+    font-weight: bold;
+}

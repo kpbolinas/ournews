@@ -1,0 +1,36 @@
+#header-main {
+    background-color: #9D1919;
+}
+
+#header-logo-container {
+    border: solid 0.1px #ffffff;
+}
+
+#header-logo {
+    margin: 10px;
+    width: 80%;
+}
+
+#header-title {
+    color: #fff;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+#sidebar-container {
+    background: #9D1919;
+    padding: 0;
+}
+
+#sidebar > .nav-link {
+    color: #ffffff;
+    border: solid 0.1px #fff;
+    border-radius: 0;
+}
+
+#sidebar > .nav-link.active {
+    color: #9D1919;
+    background-color: #ffffff;
+    border-bottom-right-radius: 100px;
+    border-top-left-radius: 100px;
+}
