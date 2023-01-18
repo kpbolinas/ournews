@@ -20,6 +20,22 @@ const initializeApiConfig = () => {
     "application/x-www-form-urlencoded";
 
   axios.defaults.withCredentials = true;
+
+  axios.interceptors.request.use(
+    function (config) {
+      // Do something before request is sent
+      const auth = JSON.parse(localStorage.getItem("auth-info")) ?? null;
+      const authToken = auth?.token ? "Bearer " + auth.token : "";
+      config.headers["Authorization"] = authToken;
+      axios.defaults.headers.common["Authorization"] = authToken;
+
+      return config;
+    },
+    function (error) {
+      // Do something with request error
+      return Promise.reject(error);
+    }
+  );
 };
 
 export { initializeApiConfig, axios };

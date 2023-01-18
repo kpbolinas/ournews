@@ -1,4 +1,5 @@
 import React from "react";
+import { axios } from "api";
 import { AuthConsumer } from "../authentication";
 import UserRole from "data/constants/user-role";
 import FormTemplate from "components/common/form";
@@ -35,11 +36,13 @@ class LoginForm extends React.Component {
         const { data } = response.data;
         const role = data.role;
         const userRoles = UserRole.all();
+        // Set auth token
+        axios.defaults.headers.common["Authorization"] = "Bearer " + data.token;
 
         if (userRoles.includes(role)) {
-          await updateAuth(data);
-          window.location.href =
+          const redirectRoute =
             role === UserRole.Moderator ? "/unpublished" : "/member";
+          await updateAuth(data, redirectRoute);
         } else {
           await UserApiService.logout({
             headers: { Authorization: "Bearer " + data.token },

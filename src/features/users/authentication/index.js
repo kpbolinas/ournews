@@ -22,10 +22,11 @@ class AuthProvider extends React.Component {
     };
   }
 
-  updateAuth = (auth) => {
+  updateAuth = async (auth, route = "/") => {
     const stringifyAuth = auth ? JSON.stringify(auth) : null;
     localStorage.setItem("auth-info", stringifyAuth);
-    this.setState({ auth });
+    await this.setState({ auth });
+    window.location.href = route;
   };
 
   checkAuthStorage = () => {
@@ -56,7 +57,6 @@ class AuthProvider extends React.Component {
 
     if (authToken !== "") {
       // Validate token API
-      axios.defaults.withCredentials = true;
       await axios
         .get("/api/validate-token")
         .then(() => {})
