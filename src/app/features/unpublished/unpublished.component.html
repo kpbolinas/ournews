@@ -1,0 +1,270 @@
+<div class="row filter-form-container">
+  <div
+    class="col-1 d-flex justify-content-center align-items-center filter-form-label"
+  >
+    FILTER :
+  </div>
+  <div class="col-9">
+    <div class="row">
+      <div class="col">
+        <div>
+          <select name="order" class="form-select" [formControl]="order">
+            <option value="1">Latest</option>
+            <option value="2">Oldest</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div>
+          <input
+            name="date"
+            type="date"
+            class="form-control"
+            [formControl]="date"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-2 d-flex justify-content-center align-items-center">
+    <button
+      type="button"
+      class="btn-custom-color btn btn-outline-danger"
+      (click)="showComposeArticleModal()"
+    >
+      CREATE ARTICLE
+    </button>
+  </div>
+</div>
+<div *ngIf="!articles.length; else elseBlock" class="row">
+  <div
+    class="d-flex text-center align-middle justify-content-center align-items-center"
+  >
+    No record(s) found.
+  </div>
+</div>
+<ng-template #elseBlock>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover w-100">
+      <thead class="text-center thead-style">
+        <tr>
+          <th>TITLE</th>
+          <th>LAST MODIFIED DATE</th>
+          <th>-</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr #articles *ngFor="let article of articles">
+          <td>{{ article.title }}</td>
+          <td>{{ article.updated_at }}</td>
+          <td>
+            <a
+              *ngIf="article.notes"
+              class="btn btn-link"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Return Notes"
+              (click)="showReturnNotesModal(article.notes)"
+            >
+              <img src="/assets/icons/sticky-fill.svg" alt="Return Notes" />
+            </a>
+            <a
+              class="btn btn-link"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Continue Draft"
+              (click)="showComposeArticleModal(article.id)"
+            >
+              <img src="/assets/icons/pencil-fill.svg" alt="Continue Draft" />
+            </a>
+            <a
+              class="btn btn-link"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Discard"
+              (click)="showDiscardModal(article.id)"
+            >
+              <img src="/assets/icons/trash-fill.svg" alt="Discard" />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+<ngb-pagination
+  *ngIf="collectionSize > 10"
+  class="d-flex justify-content-center"
+  [collectionSize]="collectionSize"
+  [(page)]="page"
+  [maxSize]="9"
+  [rotate]="true"
+  [ellipses]="false"
+  [boundaryLinks]="true"
+  (pageChange)="onPageChange()"
+>
+  <ng-template ngbPaginationFirst>&laquo;</ng-template>
+  <ng-template ngbPaginationPrevious>&lsaquo;</ng-template>
+  <ng-template ngbPaginationNext>&rsaquo;</ng-template>
+  <ng-template ngbPaginationLast>&raquo;</ng-template>
+</ngb-pagination>
+
+<!-- Return Notes Modal -->
+<div
+  id="rn-modal"
+  class="modal fade"
+  aria-hidden="true"
+  aria-labelledby="rn-modal-label"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header modal-header-custom">
+        <div
+          id="rn-modal-label"
+          class="w-100 d-flex justify-content-center modal-title h4"
+        >
+          RETURN NOTES
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Create or Continue Modal -->
+<div
+  id="ca-modal"
+  class="modal fade"
+  aria-hidden="true"
+  aria-labelledby="ca-modal-label"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header modal-header-custom">
+        <div
+          id="ca-modal-label"
+          class="w-100 d-flex justify-content-center modal-title h4"
+        >
+          COMPOSE ARTICLE
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form novalidate class="form-main" [formGroup]="composeArticleForm">
+          <div class="row">
+            <div class="col-3 text-center">
+              <img
+                class="img-fluid"
+                src="/assets/images/main/default-article.png"
+                alt="Defaul Article"
+              />
+              <span class="add-photo-label">Add Photo</span>
+            </div>
+            <div class="col-9">
+              <div class="mb-3">
+                <label class="form-label" for="formGroupTitle">Title</label>
+                <input
+                  name="title"
+                  placeholder="Title"
+                  type="text"
+                  id="formGroupTitle"
+                  class="form-control"
+                  [class.is-invalid]="caFormErrors.title"
+                  formControlName="title"
+                />
+                <div class="invalid-feedback">{{ caFormErrors.title }}</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="formGroupContent">Body</label>
+                <textarea
+                  rows="5"
+                  name="content"
+                  placeholder="Body"
+                  id="formGroupContent"
+                  class="form-control"
+                  [class.is-invalid]="caFormErrors.content"
+                  formControlName="content"
+                ></textarea>
+                <div class="invalid-feedback">{{ caFormErrors.content }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn-custom-color btn btn-outline-danger"
+              (click)="handleForApproval()"
+            >
+              SUBMIT FOR APPROVAL
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button
+              type="button"
+              class="btn-custom-color btn btn-outline-danger"
+              (click)="handleSaveDraft()"
+            >
+              SAVE AS DRAFT
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  id="da-modal"
+  class="modal fade"
+  aria-hidden="true"
+  aria-labelledby="da-modal-label"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header modal-header-custom">
+        <div
+          id="da-modal-label"
+          class="w-100 d-flex justify-content-center modal-title h4"
+        >
+          DISCARD ARTICLE
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex text-center">
+          Are you sure you want to discard this article?
+        </div>
+        <br />
+        <button
+          type="button"
+          class="btn-custom-color btn btn-outline-danger w-100"
+          (click)="handleDiscard()"
+        >
+          CONFIRM
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

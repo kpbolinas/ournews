@@ -1,0 +1,38 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1,
+          "VariableDeclarator": 2,
+          "MemberExpression": 1,
+          "FunctionDeclaration": {"body": 1, "parameters": 1},
+          "FunctionExpression": {"body": 1, "parameters": 1},
+          "CallExpression": {"arguments": 1},
+          "ObjectExpression": 1,
+          "ArrayExpression": 1,
+          "ignoreComments": true
+        }
+      ],
+      "semi": ["error", "always"],
+      "quotes": ["error", "single"],
+      "comma-spacing": ["error", { "before": false, "after": true }],
+      "comma-dangle": "error",
+      "func-call-spacing": "error",
+      "brace-style": "error",
+      "keyword-spacing": "error",
+      "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+      "object-curly-spacing": ["error", "always"],
+      "padding-line-between-statements": [
+        "error",
+        {"blankLine": "always", "prev": "*", "next": "return" },
+        { "blankLine": "always", "prev": ["case", "default"], "next": "*" },
+        { "blankLine": "any", "prev": ["case", "default"], "next": ["case", "default"] }
+      ],
+      "space-before-blocks": "error",
+      "space-infix-ops": ["error", { "int32Hint": true }]
+    }
+  }

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { MainComponent } from './main/main.component';
 import { GuestComponent } from './guest/guest.component';
 import { LayoutRoutingModule } from './layout-routing.module';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HeaderComponent } from '../header/header.component';
 
 @NgModule({
   imports: [
@@ -10,7 +12,9 @@ import { LayoutRoutingModule } from './layout-routing.module';
   exports: [],
   declarations: [
     MainComponent,
-    GuestComponent
+    GuestComponent,
+    SidebarComponent,
+    HeaderComponent
   ]
 })
 

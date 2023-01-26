@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModule } from './common/layouts/layout.module';
+import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './api/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -11,12 +13,13 @@ import { LayoutModule } from './common/layouts/layout.module';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([
-    ]),
+    RouterModule.forRoot([]),
     LayoutModule,
-    NgbModule
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 

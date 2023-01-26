@@ -1,0 +1,12 @@
+#sidebar > .nav-link {
+  color: #ffffff;
+  border: solid 0.1px #fff;
+  border-radius: 0;
+}
+
+#sidebar > .nav-link.active {
+  color: #9d1919;
+  background-color: #ffffff;
+  border-bottom-right-radius: 100px;
+  border-top-left-radius: 100px;
+}

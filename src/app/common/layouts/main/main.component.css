@@ -1,0 +1,23 @@
+#header-main {
+  background-color: #9d1919;
+}
+
+#header-logo-container {
+  border: solid 0.1px #ffffff;
+}
+
+#header-logo {
+  margin: 10px;
+  width: 80%;
+}
+
+#header-title {
+  color: #fff;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+#sidebar-container {
+  background: #9d1919;
+  padding: 0;
+}

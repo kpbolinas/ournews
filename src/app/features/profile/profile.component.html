@@ -1,0 +1,203 @@
+<div class="row profile-wrapper">
+  <div
+    class="col-4 d-flex text-center align-middle justify-content-center align-items-center"
+  >
+    <img src="/assets/images/main/default-profile.png" alt="Default Profile" />
+  </div>
+  <div class="col-8 d-flex align-middle align-items-center">
+    <div class="row w-100 info-wrapper">
+      <div>
+        <span class="info-label">Email: </span><span>{{ info.email }}</span>
+      </div>
+      <div>
+        <span class="info-label">First Name: </span>
+        <span>{{ info.first_name }}</span>
+      </div>
+      <div>
+        <span class="info-label">Last Name: </span>
+        <span>{{ info.last_name }}</span>
+      </div>
+      <div>
+        <span>
+          <button
+            type="button"
+            class="btn-custom-color btn btn-outline-danger"
+            (click)="showEditInfoForm()"
+          >
+            Edit Info
+          </button> </span
+        >&nbsp;<span>
+          <button
+            type="button"
+            class="btn-custom-color btn btn-outline-danger"
+            (click)="showChangePassForm()"
+          >
+            Change Password
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Info Modal -->
+<div
+  id="ei-modal"
+  class="modal fade"
+  aria-hidden="true"
+  aria-labelledby="ei-modal-label"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header modal-header-custom">
+        <div
+          id="ei-modal-label"
+          class="w-100 d-flex justify-content-center modal-title h4"
+        >
+          EDIT INFO
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          novalidate
+          class="form-main"
+          [formGroup]="editInfoForm"
+          (ngSubmit)="handleEditInfo()"
+        >
+          <div class="mb-3">
+            <label class="form-label" for="formGroupFirstname">First name</label
+            ><input
+              name="first_name"
+              placeholder="First name"
+              type="text"
+              id="formGroupFirstname"
+              class="form-control"
+              [class.is-invalid]="eiFormErrors.first_name"
+              formControlName="first_name"
+            />
+            <div class="invalid-feedback">{{ eiFormErrors.first_name }}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="formGroupLastname">Last name</label
+            ><input
+              name="last_name"
+              placeholder="Last name"
+              type="text"
+              id="formGroupLastname"
+              class="form-control"
+              [class.is-invalid]="eiFormErrors.last_name"
+              formControlName="last_name"
+            />
+            <div class="invalid-feedback">{{ eiFormErrors.last_name }}</div>
+          </div>
+          <div class="d-grid">
+            <button
+              type="submit"
+              class="btn-custom-color btn btn-outline-danger"
+            >
+              SAVE
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div
+  id="cp-modal"
+  class="modal fade"
+  aria-hidden="true"
+  aria-labelledby="cp-modal-label"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header modal-header-custom">
+        <div
+          id="cp-modal-label"
+          class="w-100 d-flex justify-content-center modal-title h4"
+        >
+          CHANGE PASSWORD
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          novalidate=""
+          class="form-main"
+          [formGroup]="changePasswordForm"
+          (ngSubmit)="handleChangePass()"
+        >
+          <div class="mb-3">
+            <label class="form-label" for="formGroupOldPassword"
+              >Old Password</label
+            ><input
+              name="password"
+              placeholder="Old Password"
+              type="password"
+              id="formGroupOldPassword"
+              class="form-control"
+              [class.is-invalid]="cpFormErrors.password"
+              formControlName="password"
+            />
+            <div class="invalid-feedback">{{ cpFormErrors.password }}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="formGroupNewPassword"
+              >New Password</label
+            ><input
+              name="new_password"
+              placeholder="New Password"
+              type="password"
+              id="formGroupNewPassword"
+              class="form-control"
+              [class.is-invalid]="cpFormErrors.new_password"
+              formControlName="new_password"
+            />
+            <div class="invalid-feedback">{{ cpFormErrors.new_password }}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="formGroupConfirmNewPassword"
+              >Confirm New Password</label
+            ><input
+              name="confirm_new_password"
+              placeholder="Confirm New Password"
+              type="password"
+              id="formGroupConfirmNewPassword"
+              class="form-control"
+              [class.is-invalid]="cpFormErrors.confirm_new_password"
+              formControlName="confirm_new_password"
+            />
+            <div class="invalid-feedback">
+              {{ cpFormErrors.confirm_new_password }}
+            </div>
+          </div>
+          <div class="d-grid">
+            <button
+              type="submit"
+              class="btn-custom-color btn btn-outline-danger"
+            >
+              SAVE
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

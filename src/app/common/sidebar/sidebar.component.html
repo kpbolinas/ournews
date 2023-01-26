@@ -1,0 +1,21 @@
+<div class="flex-column nav nav-pills nav-justified" id="sidebar">
+  <a
+    class="nav-link"
+    [class.active]="currentRoute === '/unpublished'"
+    routerLink="/unpublished"
+    >Unpublished</a
+  >
+  <a
+    class="nav-link"
+    [class.active]="currentRoute === '/published'"
+    routerLink="/published"
+    >Published</a
+  >
+  <a
+    class="nav-link"
+    [class.active]="currentRoute === '/profile'"
+    routerLink="/profile"
+    >Profile</a
+  >
+  <a class="nav-link" routerLink="/logout">Logout</a>
+</div>

@@ -1,3 +1,28 @@
-<p>main works!</p>
-
-<router-outlet></router-outlet>
+<div class="container-fluid h-100">
+  <div id="header-main" class="row">
+    <div
+      id="header-logo-container"
+      class="col-2 d-flex text-center align-middle justify-content-center align-items-center"
+    >
+      <img
+        id="header-logo"
+        src="/assets/images/main/on-reporter-header.png"
+        alt="OUR News"
+      />
+    </div>
+    <div
+      id="header-title"
+      class="col-10 d-flex text-center align-middle justify-content-center align-items-center"
+    >
+      <app-header></app-header>
+    </div>
+  </div>
+  <div class="row h-100">
+    <div id="sidebar-container" class="col-2">
+      <app-sidebar></app-sidebar>
+    </div>
+    <div class="col-10">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

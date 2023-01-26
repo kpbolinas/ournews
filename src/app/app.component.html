@@ -1,1 +1,25 @@
 <router-outlet></router-outlet>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div
+    id="our-toast"
+    class="toast text-bg-danger"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+    data-bs-delay="3000"
+  >
+    <div class="toast-header">
+      <strong class="me-auto text-black">{{ title }}</strong>
+    </div>
+    <div id="our-toast-body" class="toast-body text-white"></div>
+  </div>
+</div>
+
+<div id="spinner-container">
+  <div id="spinner-wrapper">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

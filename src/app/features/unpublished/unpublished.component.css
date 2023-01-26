@@ -1,0 +1,51 @@
+.filter-form-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.filter-form-label {
+  font-weight: bold;
+}
+
+.thead-style {
+  background-color: #9d1919;
+  color: #ffffff;
+}
+
+.btn-custom-color {
+  --bs-btn-color: #9d1919;
+  --bs-btn-border-color: #9d1919;
+  --bs-btn-hover-bg: #9d1919;
+  --bs-btn-hover-border-color: #9d1919;
+}
+
+ngb-pagination ::ng-deep .page-item:not(.active) .page-link,
+ngb-pagination ::ng-deep .page-item:not(.active) .page-link:hover {
+  color: #9d1919 !important;
+}
+
+ngb-pagination ::ng-deep .page-item.active .page-link {
+  background-color: #9d1919 !important;
+  border-color: #9d1919 !important;
+}
+
+ngb-pagination ::ng-deep .page-item.disabled .page-link {
+  color: #6c757d !important;
+}
+
+.modal-header-custom {
+  background-color: #9d1919;
+  color: #ffffff;
+}
+
+.form-main {
+  padding: 20px;
+}
+
+textarea {
+  resize: none;
+}
+
+.add-photo-label {
+  font-size: small;
+}

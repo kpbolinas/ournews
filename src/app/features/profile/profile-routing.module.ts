@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PageNotFoundComponent } from './page-not-found.component';
+import { ProfileComponent } from './profile.component';
 
 const routes: Routes = [
-  { path: '', component: PageNotFoundComponent }
+  { path: '', component: ProfileComponent }
 ];
 
 @NgModule({
@@ -11,4 +11,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 
-export class PageNotFoundRoutingModule {}
+export class ProfileRoutingModule {}

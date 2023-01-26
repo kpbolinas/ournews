@@ -1,5 +1,54 @@
-<p>verification works!</p>
-
-<a routerLink="/login">Login</a>
-<br>
-<a routerLink="/forgot-password">Forgot Password</a>
+<div class="form-header-custom-color"><h2>VERIFICATION</h2></div>
+<form
+  novalidate=""
+  class="form-main form-main-border"
+  [formGroup]="verificationForm"
+  (ngSubmit)="handleSubmit()"
+>
+  <div class="mb-3">
+    <label class="form-label" for="formGroupEmail">Email</label
+    ><input
+      name="email"
+      placeholder="Email"
+      type="email"
+      id="formGroupEmail"
+      class="form-control"
+      [class.is-invalid]="formErrors.email"
+      formControlName="email"
+    />
+    <div class="invalid-feedback">{{ formErrors.email }}</div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="formGroupToken">Token</label
+    ><input
+      name="token"
+      placeholder="Token"
+      type="text"
+      id="formGroupToken"
+      class="form-control"
+      [class.is-invalid]="formErrors.token"
+      formControlName="token"
+    />
+    <div class="invalid-feedback">{{ formErrors.token }}</div>
+  </div>
+  <div class="d-grid">
+    <button type="submit" class="btn-custom-color btn btn-outline-danger">
+      SUBMIT
+    </button>
+  </div>
+</form>
+<div class="d-flex align-items-end flex-column">
+  <a
+    role="button"
+    tabindex="0"
+    routerLink="/login"
+    class="no-side-padding btn btn-link"
+    >Back to LOGIN</a
+  ><a
+    role="button"
+    tabindex="0"
+    routerLink="/forgot-password"
+    class="no-side-padding btn btn-link"
+    >Forgot Password</a
+  >
+</div>

@@ -1,0 +1,31 @@
+.profile-wrapper {
+  border: solid 0.1px #9d1919;
+}
+
+.info-wrapper > div {
+  margin: 5px 0;
+}
+
+.info-label {
+  font-weight: bold;
+}
+
+.modal-header-custom {
+  background-color: #9d1919;
+  color: #ffffff;
+}
+
+.form-main {
+  padding: 20px;
+}
+
+.form-header-custom-color {
+  color: #9d1919;
+}
+
+.btn-custom-color {
+  --bs-btn-color: #9d1919;
+  --bs-btn-border-color: #9d1919;
+  --bs-btn-hover-bg: #9d1919;
+  --bs-btn-hover-border-color: #9d1919;
+}
