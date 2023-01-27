@@ -75,7 +75,7 @@ Route::prefix('/reporters')->middleware(['auth:sanctum', 'reporter.access'])->gr
         Route::post('/', [ReporterArticleController::class, 'create']);
         Route::patch('/{article}', [ReporterArticleController::class, 'update']);
         Route::delete('/{article}', [ReporterArticleController::class, 'delete']);
-        Route::get('/notes/{article}', [ReporterArticleController::class, 'notes']);
+        Route::get('/{article}', [ReporterArticleController::class, 'detail']);
         Route::get('/published/{page?}/{order?}/{date?}', [ReporterArticleController::class, 'published']);
     });
     Route::prefix('/comments')->group(function () {

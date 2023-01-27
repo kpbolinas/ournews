@@ -15,8 +15,15 @@ class ArticleDetailResource extends JsonResource
      */
     public function toArray($request)
     {
+        $bookmarked = $this->bookmarked($request->user());
+        $bookmarkId = $bookmarked->count() ? $bookmarked->first()->id : null;
+        $favorite = $this->favorite($request->user());
+        $favoriteId = $favorite->count() ? $favorite->first()->id : null;
+
         return [
             'id' => $this->id,
+            'bookmark_id' => $bookmarkId,
+            'favorite_id' => $favoriteId,
             'title' => $this->title,
             'content' => $this->content,
             'photo' => $this->photo,

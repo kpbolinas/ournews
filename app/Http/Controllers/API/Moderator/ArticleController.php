@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Moderator;
 use App\Enums\ArticleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleReviseRequest;
-use App\Http\Resources\Moderator\ArticleDetailResource;
+use App\Http\Resources\Reporter\ArticleDetailResource;
 use App\Http\Resources\Reporter\ArticlePublishedResource;
 use App\Http\Resources\Reporter\ArticleUnpublishedResource;
 use App\Models\Article;

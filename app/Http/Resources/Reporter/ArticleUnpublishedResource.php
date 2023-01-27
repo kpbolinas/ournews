@@ -18,6 +18,7 @@ class ArticleUnpublishedResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'notes' => $this->notes,
             'updated_at' => Carbon::parse($this->updated_at)->rawFormat('Y-m-d H:i'),
         ];
     }

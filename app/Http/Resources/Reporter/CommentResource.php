@@ -20,7 +20,7 @@ class CommentResource extends JsonResource
             'content' => $this->content,
             'first_name' => $this->commenter->first_name,
             'last_name' => $this->commenter->last_name,
-            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
         ];
     }
 }

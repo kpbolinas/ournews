@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Reporter;
 use App\Enums\ArticleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleRequest;
-use App\Http\Resources\Reporter\ArticleNoteResource;
+use App\Http\Resources\Reporter\ArticleDetailResource;
 use App\Http\Resources\Reporter\ArticlePublishedResource;
 use App\Http\Resources\Reporter\ArticleUnpublishedResource;
 use App\Models\Article;
@@ -34,6 +34,30 @@ class ArticleController extends Controller
                 $page
             );
         $response = ArticleUnpublishedResource::collection($articles);
+
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
+    }
+
+    /**
+     * Article detail api
+     *
+     * @param \App\Models\Article $article
+     * @return \Illuminate\Http\Response
+     */
+    public function detail(Article $article)
+    {
+        if (!in_array(
+            $article->status,
+            [
+                ArticleStatus::Draft->value,
+                ArticleStatus::ForRevision->value
+            ]
+        )) {
+            return response()
+                ->respondBadRequest([], 'Article should be under For Approval status.');
+        }
+
+        $response = new ArticleDetailResource($article);
 
         return response()->respondSuccess($response, 'Okay.');
     }
@@ -113,24 +137,6 @@ class ArticleController extends Controller
     }
 
     /**
-     * Article display notes api
-     *
-     * @param \App\Models\Article $article
-     * @return \Illuminate\Http\Response
-     */
-    public function notes(Article $article)
-    {
-        $this->authorize('view', $article);
-        if ($article->status !== ArticleStatus::ForRevision->value) {
-            return response()
-                ->respondBadRequest([], 'Article should be under For Revision status.');
-        }
-        $response = new ArticleNoteResource($article);
-
-        return response()->respondSuccess($response, 'Okay.');
-    }
-
-    /**
      * Article published api
      *
      * @param integer $page
@@ -153,6 +159,6 @@ class ArticleController extends Controller
             );
         $response = ArticlePublishedResource::collection($articles);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
     }
 }
