@@ -1,13 +1,15 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { AuthContext } from "features/users/authentication";
 import LogoMain from "assets/images/guest/on.png";
-import LoginPage from "pages/login";
-import ForgotPasswordPage from "pages/forgot-password";
-import VerificationPage from "pages/verification";
-import ErrorPage from "pages/error";
 
 class GuestLayout extends React.Component {
+  static contextType = AuthContext;
+
   render() {
+    const { authGuard } = this.context;
+    authGuard("guest");
+
     return (
       <div className="container-fluid h-100">
         <div className="row h-100">
@@ -18,24 +20,7 @@ class GuestLayout extends React.Component {
           </div>
           <div className="col d-flex align-middle justify-content-center align-items-center">
             <div className="w-50">
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<LoginPage />} />
-                  <Route
-                    path="/forgot-password"
-                    element={<ForgotPasswordPage />}
-                  />
-                  <Route path="/verification" element={<VerificationPage />} />
-                  <Route
-                    path="/not-found"
-                    element={<ErrorPage code={404} message="Page Not Found" />}
-                  />
-                  <Route
-                    path="*"
-                    element={<Navigate replace to="/not-found" />}
-                  />
-                </Routes>
-              </BrowserRouter>
+              <Outlet />
             </div>
           </div>
         </div>

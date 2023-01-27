@@ -81,7 +81,7 @@ class ForgotPassword extends React.Component {
           </div>
         </FormTemplate>
         <div className="d-flex align-items-end flex-column">
-          <ButtonTemplate type="link" className="no-side-padding" to="/">
+          <ButtonTemplate type="link" className="no-side-padding" to="/login">
             Back to LOGIN
           </ButtonTemplate>
           <ButtonTemplate

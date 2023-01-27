@@ -13,21 +13,6 @@ class Published extends React.Component {
     super(props);
     const sessionParams =
       JSON.parse(sessionStorage.getItem("published-params")) ?? {};
-
-    this.state = {
-      message: null,
-      isLoading: false,
-      articles: [],
-      page: 1,
-      lastPage: null,
-      order: 1,
-      date: null,
-      ...sessionParams,
-      selectedArticleId: null,
-      showUnpublishModal: false,
-      showCommentsModal: false,
-    };
-
     const params = {
       page: 1,
       order: 1,
@@ -35,6 +20,17 @@ class Published extends React.Component {
       ...sessionParams,
     };
     sessionStorage.setItem("published-params", JSON.stringify(params));
+
+    this.state = {
+      message: null,
+      isLoading: false,
+      articles: [],
+      ...params,
+      lastPage: null,
+      selectedArticleId: null,
+      showUnpublishModal: false,
+      showCommentsModal: false,
+    };
   }
 
   setParams = (param) => {
@@ -135,6 +131,7 @@ class Published extends React.Component {
               onChangeDate={this.setDate}
             />
             <Tabulation
+              trClass="cursor-pointer"
               articles={articles}
               showComments={this.showCommentsModal}
               actionButtons={[

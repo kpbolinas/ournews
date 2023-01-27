@@ -12,20 +12,6 @@ class Archived extends React.Component {
     super(props);
     const sessionParams =
       JSON.parse(sessionStorage.getItem("archived-params")) ?? {};
-
-    this.state = {
-      message: null,
-      isLoading: false,
-      articles: [],
-      page: 1,
-      lastPage: null,
-      order: 1,
-      date: null,
-      ...sessionParams,
-      selectedArticleId: null,
-      showUnarchiveModal: false,
-    };
-
     const params = {
       page: 1,
       order: 1,
@@ -33,6 +19,16 @@ class Archived extends React.Component {
       ...sessionParams,
     };
     sessionStorage.setItem("archived-params", JSON.stringify(params));
+
+    this.state = {
+      message: null,
+      isLoading: false,
+      articles: [],
+      ...params,
+      lastPage: null,
+      selectedArticleId: null,
+      showUnarchiveModal: false,
+    };
   }
 
   setParams = (param) => {

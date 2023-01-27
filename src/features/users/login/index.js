@@ -32,7 +32,7 @@ class LoginForm extends React.Component {
     const { updateAuth } = context;
 
     await UserApiService.login(formData)
-      .then(async (response) => {
+      .then((response) => {
         const { data } = response.data;
         const role = data.role;
         const userRoles = UserRole.all();
@@ -40,11 +40,12 @@ class LoginForm extends React.Component {
         axios.defaults.headers.common["Authorization"] = "Bearer " + data.token;
 
         if (userRoles.includes(role)) {
+          updateAuth(data);
           const redirectRoute =
             role === UserRole.Moderator ? "/unpublished" : "/member";
-          await updateAuth(data, redirectRoute);
+          window.location.href = redirectRoute;
         } else {
-          await UserApiService.logout({
+          UserApiService.logout({
             headers: { Authorization: "Bearer " + data.token },
           });
           this.setMessage("Access Denied (Forbidden)");

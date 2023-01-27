@@ -1,59 +1,64 @@
 .article-content textarea {
-    background-color: #ffffff !important;
-    border: 0 !important;
-    padding: 0 !important;
+  background-color: #ffffff !important;
+  border: 0 !important;
+  padding: 0 !important;
 }
 
 .article-date,
 .article-reporter {
-    font-size: x-small;
+  font-size: x-small;
+}
+
+.article-date span,
+.article-reporter span {
+  font-weight: bold;
 }
 
 .comment-section {
-    border-top: solid 0.1px #9D1919;
-    border-bottom: solid 0.1px #9D1919;
+  border-top: solid 0.1px #9d1919;
+  border-bottom: solid 0.1px #9d1919;
 }
 
 .comment-row {
-    margin: 0;
+  margin: 0;
 }
 
 .highlight-comment-row {
-    background-color: #808080;
+  background-color: #808080;
 }
 
 .comment-owner-detail {
-    border: solid 0.1px #9D1919;
-    border-radius: 10px;
-    margin-top: 3px;
-    margin-bottom: 3px;
+  border: solid 0.1px #9d1919;
+  border-radius: 10px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 .comment-date,
 .comment-owner {
-    font-size: smaller;
+  font-size: smaller;
 }
 
 .comment-date span {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .comment-content-container {
-    position: relative;
-    padding-right: 0;
+  position: relative;
+  padding-right: 0;
 }
 
 .comment-content {
-    border: solid 0.1px #9D1919;
-    height: 85%;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    padding-left: 3px;
-    padding-right: 3px;
+  border: solid 0.1px #9d1919;
+  height: 85%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 .btn-report {
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }

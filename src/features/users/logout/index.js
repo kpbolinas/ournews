@@ -14,8 +14,9 @@ class LogoutObject extends React.Component {
     const { updateAuth } = context;
 
     await UserApiService.logout()
-      .then(async () => {
-        await updateAuth(null);
+      .then(() => {
+        updateAuth(null);
+        window.location.href = "/login";
       })
       .catch(({ response }) => {
         const message = response.data?.message;

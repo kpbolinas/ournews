@@ -12,7 +12,7 @@ import {
 
 class Tabulation extends React.Component {
   render() {
-    const { articles, actionButtons, showComments } = this.props;
+    const { articles, actionButtons, showComments, trClass } = this.props;
 
     if (!articles?.length) {
       return (
@@ -57,7 +57,7 @@ class Tabulation extends React.Component {
       }
       // Compile table body
       tbody.push(
-        <tr key={`tbody-row-${index}`}>
+        <tr key={`tbody-row-${index}`} className={trClass}>
           <td onClick={showComments ? () => showComments(item.id) : undefined}>
             {item.title}
           </td>

@@ -14,23 +14,6 @@ class Unpublished extends React.Component {
     super(props);
     const sessionParams =
       JSON.parse(sessionStorage.getItem("unpublished-params")) ?? {};
-
-    this.state = {
-      message: null,
-      isLoading: false,
-      articles: [],
-      page: 1,
-      lastPage: null,
-      order: 1,
-      date: null,
-      ...sessionParams,
-      articleDetail: null,
-      selectedArticleId: null,
-      showPublishModal: false,
-      showRevisionModal: false,
-      showArchiveModal: false,
-    };
-
     const params = {
       page: 1,
       order: 1,
@@ -38,6 +21,19 @@ class Unpublished extends React.Component {
       ...sessionParams,
     };
     sessionStorage.setItem("unpublished-params", JSON.stringify(params));
+
+    this.state = {
+      message: null,
+      isLoading: false,
+      articles: [],
+      ...params,
+      lastPage: null,
+      articleDetail: null,
+      selectedArticleId: null,
+      showPublishModal: false,
+      showRevisionModal: false,
+      showArchiveModal: false,
+    };
   }
 
   setParams = (param) => {
@@ -88,10 +84,8 @@ class Unpublished extends React.Component {
     ArticleApiService.unpublished(params)
       .then((response) => {
         const { data } = response.data;
-        const articles = data.articles;
-        const lastPage = data.last_page;
-        this.setArticles(articles);
-        this.setLastPage(lastPage);
+        this.setArticles(data.articles);
+        this.setLastPage(data.last_page);
       })
       .catch(({ response }) => {
         const message = response.data?.message;

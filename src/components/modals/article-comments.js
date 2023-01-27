@@ -55,7 +55,7 @@ class ArticleComments extends React.Component {
 
   getComments = () => {
     this.setMessage(null);
-    CommentApiService.list(this.props.articleId, `/${this.state.page}`)
+    CommentApiService.list(`/${this.props.articleId}/${this.state.page}`)
       .then((response) => {
         const { data } = response.data;
         this.setLastPage(data.last_page);
@@ -87,7 +87,7 @@ class ArticleComments extends React.Component {
                 <img
                   className="img-fluid"
                   src={CommenterDefault}
-                  alt="Default Article"
+                  alt="Default Profile"
                 />
               </div>
               <div className="col-9">
@@ -106,7 +106,7 @@ class ArticleComments extends React.Component {
                 id={`btn-report-${index}`}
                 key={index}
                 type="action"
-                tooltip="Remove"
+                tooltip="Remove Comment"
                 onClick={() => {
                   this.showRemoveCommentModal(item.id);
                   this.setRowHighlight(index);
@@ -166,10 +166,10 @@ class ArticleComments extends React.Component {
                   />
                 </div>
                 <div className="article-date">
-                  Date: {article?.published_date}
+                  <span>Date:</span> {article?.published_date}
                 </div>
                 <div className="article-reporter">
-                  Reporter: {article?.reporter_name}
+                  <span>Reporter:</span> {article?.reporter_name}
                 </div>
               </div>
             </div>

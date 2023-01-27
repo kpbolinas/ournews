@@ -1,8 +1,8 @@
 textarea {
-   resize: none;
+  resize: none;
 }
 
 .no-side-padding {
-   padding-left: 0;
-   padding-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }

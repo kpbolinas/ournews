@@ -4,9 +4,11 @@ class ArticleApiService {
   // Unpublished API
   static unpublished = (params = "") =>
     axios.get("/api/moderators/articles/unpublished" + params);
+
   // Published API
   static published = (params = "") =>
     axios.get("/api/moderators/articles/published" + params);
+
   // Archived API
   static archived = (params = "") =>
     axios.get("/api/moderators/articles/archived" + params);

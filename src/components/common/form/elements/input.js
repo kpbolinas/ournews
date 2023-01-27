@@ -31,7 +31,10 @@ class InputTemplate extends React.Component {
     }
 
     return (
-      <Form.Group className={className} controlId={`formGroup${label ?? name}`}>
+      <Form.Group
+        className={className}
+        controlId={`formGroup${label ? label.replace(" ", "") : name}`}
+      >
         {label && <Form.Label>{label}</Form.Label>}
         <Form.Control
           as={as}

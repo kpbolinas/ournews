@@ -14,24 +14,6 @@ class OurPeople extends React.Component {
     super(props);
     const sessionParams =
       JSON.parse(sessionStorage.getItem("people-params")) ?? {};
-
-    this.state = {
-      message: null,
-      isLoading: false,
-      people: [],
-      page: 1,
-      lastPage: null,
-      role: 0,
-      keyword: null,
-      ...sessionParams,
-      articleDetail: null,
-      selectedPersonId: null,
-      showAddModal: false,
-      showResetPassModal: false,
-      showDeactivateModal: false,
-      timer: null,
-    };
-
     const params = {
       page: 1,
       role: 0,
@@ -39,6 +21,20 @@ class OurPeople extends React.Component {
       ...sessionParams,
     };
     sessionStorage.setItem("people-params", JSON.stringify(params));
+
+    this.state = {
+      message: null,
+      isLoading: false,
+      people: [],
+      ...params,
+      lastPage: null,
+      articleDetail: null,
+      selectedPersonId: null,
+      showAddModal: false,
+      showResetPassModal: false,
+      showDeactivateModal: false,
+      timer: null,
+    };
   }
 
   setParams = (param) => {
