@@ -1,0 +1,13 @@
+.page-item:not(.active) .page-link,
+.page-item:not(.active) .page-link:hover {
+  color: #9d1919;
+}
+
+.page-item.active .page-link {
+  background-color: #9d1919;
+  border-color: #9d1919;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+}
