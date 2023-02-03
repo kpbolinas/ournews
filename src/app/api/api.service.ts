@@ -4,16 +4,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AppSettings } from '../app.setting';
 import { ToastService } from 'src/app/common/toast/toast.service';
-import { EmptyExpr } from '@angular/compiler';
-
-// Set common http options
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     'Accept':  'application/json',
-//     'X-Api-Token': AppSettings.API_TOKEN
-//   }),
-//   withCredentials: true
-// };
 
 @Injectable({
   providedIn: 'root'
@@ -37,16 +27,16 @@ export class ApiService {
   // Set CSRF Cookie
   setCookie = () => {
     this.http.get(AppSettings.BASE_URL + '/sanctum/csrf-cookie', this.httpOptions)
-      .subscribe(
-        null,
-        response => {
+      .subscribe({
+        next: () => {},
+        error: response => {
           if (response?.status === 401) {
             localStorage.setItem('auth-info', '');
             this.router.navigate(['/unauthorized']);
           }
           this.toastService.show(response.error?.message);
         }
-      );
+      });
   };
 
   // Common get request format

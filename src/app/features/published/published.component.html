@@ -89,7 +89,7 @@
           id="comments-modal-label"
           class="w-100 d-flex justify-content-center modal-title h4"
         >
-          {{ article ? article.title : "" }}
+          {{ article?.title ?? "" }}
         </div>
         <button
           type="button"
@@ -115,15 +115,15 @@
                   name="content"
                   disabled="disabled"
                   class="form-control"
-                  >{{ article ? article.content : "" }}</textarea
+                  >{{ article?.content ?? "" }}</textarea
                 >
               </div>
             </div>
             <div class="article-date">
-              <span>Date:</span> {{ article ? article.published_date : "" }}
+              <span>Date:</span> {{ article?.published_date ?? "" }}
             </div>
             <div class="article-reporter">
-              <span>Reporter:</span> {{ article ? article.reporter_name : "" }}
+              <span>Reporter:</span> {{ article?.reporter_name ?? "" }}
             </div>
           </div>
         </div>
@@ -143,25 +143,29 @@
             >
               <div class="col-4">
                 <div class="row comment-owner-detail">
-                  <div class="col-3">
-                    <img
-                      class="img-fluid"
-                      src="/assets/images/main/default-profile-comment.png"
-                      alt="Default Profile"
-                    />
+                  <div
+                    class="col-3 d-flex justify-content-center align-items-center"
+                  >
+                    <span>
+                      <img
+                        class="img-fluid"
+                        src="/assets/images/main/default-profile-comment.png"
+                        alt="Default Profile"
+                      />
+                    </span>
                   </div>
                   <div class="col-9">
                     <div class="comment-date">
-                      <span>Date : </span>{{ comment.created_at }}
+                      <span>Date : </span>{{ comment?.created_at }}
                     </div>
                     <div class="comment-owner">
-                      {{ comment.first_name }} {{ comment.last_name }}
+                      {{ comment?.first_name }} {{ comment?.last_name }}
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-8 comment-content-container">
-                <div class="comment-content">{{ comment.content }}</div>
+                <div class="comment-content">{{ comment?.content }}</div>
                 <span class="btn-report">
                   <a
                     class="btn btn-link"
