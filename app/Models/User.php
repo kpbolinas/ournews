@@ -49,14 +49,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Relation to the removed comment mails table.
-     */
-    public function mails()
-    {
-        return $this->hasMany(CommentRemoveMail::class, 'commenter_user_id');
-    }
-
-    /**
      * Scope a query to get articles
      *
      * @param \Illuminate\Database\Eloquent\Builder $query

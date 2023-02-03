@@ -21,6 +21,7 @@ class CommentResource extends JsonResource
             'first_name' => $this->commenter->first_name,
             'last_name' => $this->commenter->last_name,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
+            'is_owned' => $request->user()->id === $this->commenter->id,
         ];
     }
 }

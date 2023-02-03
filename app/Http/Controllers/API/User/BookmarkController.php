@@ -21,16 +21,12 @@ class BookmarkController extends Controller
     public function index(Request $request, int $page = 1, int $order = 1)
     {
         $user = $request->user();
+        $quantity = $page * config('custom.article_user_pagination');
         $bookmarks = Bookmark::getList([
             'user' => $user,
             'order' => $order,
         ])
-            ->paginate(
-                config('custom.article_pagination'),
-                ['bookmarks.*'],
-                'page',
-                $page
-            )
+            ->paginate($quantity, ['bookmarks.*'], 'page', 1)
             ->map(function ($bookmark) {
                 return $bookmark->article;
             });
@@ -52,7 +48,7 @@ class BookmarkController extends Controller
             $data['user_id'] = $request->user()->id;
             $bookmark = Bookmark::create($data);
 
-            return response()->respondSuccess(['id' => $bookmark->id], 'Bookmark saved successfully.');
+            return response()->respondSuccess([], 'Bookmark saved successfully.');
         } catch (\Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }

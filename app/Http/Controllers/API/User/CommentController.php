@@ -25,13 +25,9 @@ class CommentController extends Controller
             return response()
                 ->respondBadRequest([], 'Article should be under Published status.');
         }
+        $quantity = $page * config('custom.comment_pagination');
         $comments = Comment::getList($article->id)
-            ->paginate(
-                config('custom.comment_pagination'),
-                ['comments.*'],
-                'page',
-                $page
-            );
+            ->paginate($quantity, ['comments.*'], 'page', 1);
         $response = [
             'article' => new ArticleDetailResource($article),
             'comments' => CommentResource::collection($comments),

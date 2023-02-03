@@ -21,16 +21,12 @@ class FavoriteController extends Controller
     public function index(Request $request, int $page = 1, int $order = 1)
     {
         $user = $request->user();
+        $quantity = $page * config('custom.article_user_pagination');
         $favorites = Favorite::getList([
             'user' => $user,
             'order' => $order,
         ])
-            ->paginate(
-                config('custom.article_pagination'),
-                ['favorites.*'],
-                'page',
-                $page
-            )
+            ->paginate($quantity, ['favorites.*'], 'page', 1)
             ->map(function ($favorite) {
                 return $favorite->article;
             });
@@ -52,7 +48,7 @@ class FavoriteController extends Controller
             $data['user_id'] = $request->user()->id;
             $favorite = Favorite::create($data);
 
-            return response()->respondSuccess(['id' => $favorite->id], 'Favorite saved successfully.');
+            return response()->respondSuccess([], 'Favorite saved successfully.');
         } catch (\Throwable $th) {
             return response()->respondInternalServerError([], $th->getMessage());
         }

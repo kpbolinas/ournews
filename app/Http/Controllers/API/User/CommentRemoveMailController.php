@@ -30,7 +30,7 @@ class CommentRemoveMailController extends Controller
             );
         $response = MailListResource::collection($mails);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['mails' => $response, 'last_page' => $mails->lastPage()], 'Okay.');
     }
 
     /**

@@ -99,7 +99,7 @@ Route::prefix('/moderators')->middleware(['auth:sanctum', 'moderator.access'])->
     });
     Route::prefix('/comments')->group(function () {
         Route::get('/{article}/{page?}', [ReporterCommentController::class, 'index']);
-        Route::delete('/{comment}', [ReporterCommentController::class, 'delete']);
+        Route::patch('/{comment}', [ReporterCommentController::class, 'delete']);
     });
 });
 

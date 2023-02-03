@@ -18,17 +18,13 @@ class ArticleController extends Controller
      */
     public function index(int $page = 1, int $order = 1, string $date = null)
     {
+        $quantity = $page * config('custom.article_user_pagination');
         $articles = Article::published()
             ->getList([
                 'order' => $order,
                 'date' => $date ? ['field' => 'publish_date', 'value' => $date] : null,
             ])
-            ->paginate(
-                config('custom.article_user_pagination'),
-                ['articles.*'],
-                'page',
-                $page
-            );
+            ->paginate($quantity, ['articles.*'], 'page', 1);
         $response = ArticleResource::collection($articles);
 
         return response()->respondSuccess($response, 'Okay.');
