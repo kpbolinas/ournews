@@ -94,7 +94,7 @@ class Profile extends React.Component {
                         Edit Info
                       </ButtonTemplate>
                     </span>
-                    &nbsp;
+                    &nbsp;&nbsp;&nbsp;
                     <span>
                       <ButtonTemplate
                         type="modal"

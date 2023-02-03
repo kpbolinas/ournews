@@ -35,6 +35,7 @@ class AppRoutes extends React.Component {
             path="/not-found"
             element={<ErrorPage code={404} message="Page Not Found" />}
           />
+          <Route path="/" element={<Navigate replace to="/login" />} />
           <Route path="*" element={<Navigate replace to="/not-found" />} />
         </Routes>
       </BrowserRouter>

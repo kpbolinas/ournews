@@ -83,12 +83,14 @@ class ArticleComments extends React.Component {
         >
           <div className="col-4">
             <div className="row comment-owner-detail">
-              <div className="col-3">
-                <img
-                  className="img-fluid"
-                  src={CommenterDefault}
-                  alt="Default Profile"
-                />
+              <div className="col-3 d-flex justify-content-center align-items-center">
+                <span>
+                  <img
+                    className="img-fluid"
+                    src={CommenterDefault}
+                    alt="Default Profile"
+                  />
+                </span>
               </div>
               <div className="col-9">
                 <div className="comment-date">

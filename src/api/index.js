@@ -27,7 +27,6 @@ const initializeApiConfig = () => {
       const auth = JSON.parse(localStorage.getItem("auth-info")) ?? null;
       const authToken = auth?.token ? "Bearer " + auth.token : "";
       config.headers["Authorization"] = authToken;
-      axios.defaults.headers.common["Authorization"] = authToken;
 
       return config;
     },
