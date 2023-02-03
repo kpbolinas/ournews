@@ -1,6 +1,4 @@
-import React from "react";
-
-class UserRole extends React.Component {
+export default class UserRole {
   static SuperAdmin = 1;
   static Admin = 2;
   static Moderator = 3;
@@ -15,5 +13,3 @@ class UserRole extends React.Component {
     { name: "Admin", value: this.Admin },
   ];
 }
-
-export default UserRole;

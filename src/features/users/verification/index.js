@@ -36,7 +36,7 @@ class Verification extends React.Component {
     const formData = Object.fromEntries(new FormData(event.target));
 
     await UserApiService.verification(formData)
-      .then(async (response) => {
+      .then(() => {
         this.setShowMessage(true);
       })
       .catch(({ response }) => {

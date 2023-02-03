@@ -35,7 +35,7 @@ class ForgotPassword extends React.Component {
     const formData = Object.fromEntries(new FormData(event.target));
 
     await UserApiService.forgotPassword(formData)
-      .then(async (response) => {
+      .then((response) => {
         const { message } = response.data;
         this.setMessageType("success");
         this.setMessage(message);
