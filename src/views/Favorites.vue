@@ -32,6 +32,13 @@
   <!-- Articles -->
   <template v-if="articles.length">
     <div
+      v-if="lastPage && articles.length > 3"
+      class="row loader d-flex justify-content-center align-items-center fw-bold"
+      @click="setPage(1)"
+    >
+      RESET
+    </div>
+    <div
       class="row bordered article-container"
       v-for="article in articles"
       :key="article.id"
@@ -41,12 +48,12 @@
         <div
           class="bordered article-header fs-2 d-flex justify-content-center align-items-center"
         >
-          {{ article.title }}
+          <div class="m-1 text-truncate">{{ article.title }}</div>
         </div>
         <div
           class="bordered article-content d-flex justify-content-center align-items-center"
         >
-          {{ article.content }}
+          <div class="m-2">{{ article.content }}</div>
         </div>
         <div class="row bordered article-footer m-0">
           <div class="col-6">
@@ -113,6 +120,7 @@
       </div>
     </div>
     <div
+      v-if="!lastPage"
       class="row loader d-flex justify-content-center align-items-center fw-bold"
       @click="setPage(page + 1)"
     >
@@ -157,6 +165,7 @@ export default {
       page: 1,
       order: 1,
       articles: [],
+      lastPage: true,
       showSpinner: false,
       toastType: "",
       toastMessage: "",
@@ -166,6 +175,7 @@ export default {
   },
   provide() {
     return {
+      reloadArticles: this.loadArticles,
       displaySpinner: this.displaySpinner,
       displayToast: this.displayToast,
       resetTooltip: this.resetTooltip,
@@ -177,7 +187,9 @@ export default {
       let params = `/${this.page}/${this.order}`;
       await FavoriteApiService.list(params)
         .then((response) => {
-          this.articles = response.data.data;
+          const { articles, last_page } = response.data.data;
+          this.articles = articles;
+          this.lastPage = last_page === 1;
         })
         .catch(({ response }) => {
           this.showSpinner = false;

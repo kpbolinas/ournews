@@ -56,13 +56,14 @@
             <div
               class="d-flex text-center align-middle justify-content-center align-items-center"
             >
-              No record(s) found.
+              No comment(s) found.
             </div>
           </div>
           <div v-if="comments.length" class="row comment-section">
             <div
+              v-if="lastPage && comments.length > 3"
               class="row loader d-flex justify-content-center align-items-center fw-bold m-0 mb-1"
-              @click="resetPage"
+              @click="setPage(1)"
             >
               RESET
             </div>
@@ -186,7 +187,7 @@
               </div>
             </div>
             <div
-              v-if="pageEnd === false"
+              v-if="!lastPage"
               class="row loader d-flex justify-content-center align-items-center fw-bold m-0 mb-1"
               @click="setPage(page + 1)"
             >
@@ -258,14 +259,13 @@ export default {
       required: true,
     },
   },
-  inject: ["resetTooltip"],
+  inject: ["reloadArticles", "resetTooltip"],
   data() {
     return {
       article: [],
       comments: [],
       page: 1,
-      lastPage: null,
-      pageEnd: false,
+      lastPage: true,
       content: "",
       updateContent: "",
       createFormErrors: null,
@@ -285,14 +285,10 @@ export default {
       const params = `/${this.id}/${this.page}`;
       await CommentApiService.list(params)
         .then((response) => {
-          const { data } = response.data;
-          this.article = data.article;
-          this.comments = data.comments;
-          const prevPage = [null, 2];
-          if (prevPage.includes(this.lastPage) && data.last_page === 1) {
-            this.pageEnd = true;
-          }
-          this.lastPage = data.last_page;
+          const { article, comments, last_page } = response.data.data;
+          this.article = article;
+          this.comments = comments;
+          this.lastPage = last_page === 1;
         })
         .catch(({ response }) => {
           this.$emit("displaySpinner", false);
@@ -321,6 +317,7 @@ export default {
           this.$emit("displayToast", message, "text-bg-success");
           this.content = "";
           this.loadDetail();
+          this.reloadArticles();
         })
         .catch(({ response }) => {
           this.$emit("displaySpinner", false);
@@ -406,10 +403,6 @@ export default {
     setPage(value) {
       this.page = value;
       this.loadDetail();
-    },
-    resetPage() {
-      this.pageEnd = false;
-      this.setPage(1);
     },
     showEditComment(id, content) {
       this.selectedEditComment = id;

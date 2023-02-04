@@ -54,7 +54,7 @@ export default {
       required: true,
     },
   },
-  inject: ["displaySpinner", "displayToast"],
+  inject: ["reloadArticles", "displaySpinner", "displayToast"],
   methods: {
     async confirm() {
       if (!this.id) {
@@ -68,6 +68,7 @@ export default {
           this.displayToast(message, "text-bg-success");
           this.$emit("modalHide");
           this.$emit("reloadComments");
+          this.reloadArticles();
         })
         .catch(({ response }) => {
           this.$emit("displaySpinner", false);
