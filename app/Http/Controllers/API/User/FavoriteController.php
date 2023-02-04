@@ -26,13 +26,17 @@ class FavoriteController extends Controller
             'user' => $user,
             'order' => $order,
         ])
-            ->paginate($quantity, ['favorites.*'], 'page', 1)
-            ->map(function ($favorite) {
-                return $favorite->article;
-            });
+            ->paginate($quantity, ['favorites.*'], 'page', 1);
+
+        $lastPage = $favorites->lastPage();
+
+        $favorites = $favorites->map(function ($favorite) {
+            return $favorite->article;
+        });
+
         $response = ArticleResource::collection($favorites);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $lastPage], 'Okay.');
     }
 
     /**

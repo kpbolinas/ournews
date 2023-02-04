@@ -26,13 +26,17 @@ class BookmarkController extends Controller
             'user' => $user,
             'order' => $order,
         ])
-            ->paginate($quantity, ['bookmarks.*'], 'page', 1)
-            ->map(function ($bookmark) {
-                return $bookmark->article;
-            });
+            ->paginate($quantity, ['bookmarks.*'], 'page', 1);
+
+        $lastPage = $bookmarks->lastPage();
+
+        $bookmarks = $bookmarks->map(function ($bookmark) {
+            return $bookmark->article;
+        });
+
         $response = ArticleResource::collection($bookmarks);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $lastPage], 'Okay.');
     }
 
     /**

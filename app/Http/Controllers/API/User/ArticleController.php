@@ -27,6 +27,6 @@ class ArticleController extends Controller
             ->paginate($quantity, ['articles.*'], 'page', 1);
         $response = ArticleResource::collection($articles);
 
-        return response()->respondSuccess($response, 'Okay.');
+        return response()->respondSuccess(['articles' => $response, 'last_page' => $articles->lastPage()], 'Okay.');
     }
 }
