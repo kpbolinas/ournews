@@ -3,14 +3,13 @@ import router from "../router";
 
 const initializeApiConfig = () => {
   // Set base url
-  axios.defaults.baseURL = "http://localhost:8000";
+  axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
   // Set header accept application/json
   axios.defaults.headers.common["Accept"] = "application/json";
 
   // Set API token
-  axios.defaults.headers.common["X-Api-Token"] =
-    "aaae90c372bdefbae6471d43329de02501ddb4e929a73fd6dd15517e7f54610e";
+  axios.defaults.headers.common["X-Api-Token"] = import.meta.env.VITE_API_TOKEN;
 
   // Set POST content type to application/x-www-form-urlencoded
   axios.defaults.headers.post["Content-Type"] =
