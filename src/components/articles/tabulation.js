@@ -33,15 +33,25 @@ class Tabulation extends React.Component {
         let keys = Object.keys(item);
         keys.map((item, index) => {
           let colName = "";
+          let className = "";
           switch (item) {
             case "id":
+            case "notes":
               return null;
+
             case "updated_at":
+              className = "w-25";
               colName = "LAST MODIFIED DATE";
               break;
 
             case "publish_date":
+              className = "w-25";
               colName = "PUBLISHED DATE";
+              break;
+
+            case "title":
+              className = "w-50";
+              colName = item.replaceAll("_", " ");
               break;
 
             default:
@@ -49,7 +59,9 @@ class Tabulation extends React.Component {
               break;
           }
           thead.push(
-            <th key={"thead-col-" + index}>{colName.toUpperCase()}</th>
+            <th key={"thead-col-" + index} className={className}>
+              {colName.toUpperCase()}
+            </th>
           );
 
           return true;
