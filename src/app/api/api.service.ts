@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppSettings } from '../app.setting';
+import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/common/toast/toast.service';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class ApiService {
   httpOptions = {
     headers: new HttpHeaders({
       'Accept':  'application/json',
-      'X-Api-Token': AppSettings.API_TOKEN
+      'X-Api-Token': environment.apiToken
     }),
     withCredentials: true
   };
@@ -26,7 +26,7 @@ export class ApiService {
 
   // Set CSRF Cookie
   setCookie = () => {
-    this.http.get(AppSettings.BASE_URL + '/sanctum/csrf-cookie', this.httpOptions)
+    this.http.get(environment.baseURL + '/sanctum/csrf-cookie', this.httpOptions)
       .subscribe({
         next: () => {},
         error: response => {
@@ -41,7 +41,7 @@ export class ApiService {
 
   // Common get request format
   getRequest = (url: string): Observable<any> => {
-    return this.http.get(AppSettings.API_URL + url, this.httpOptions);
+    return this.http.get(environment.apiURL + url, this.httpOptions);
   };
 
   // Common post request format
@@ -49,7 +49,7 @@ export class ApiService {
     this.httpOptions.headers = this.httpOptions.headers.set('Content-Type', 'application/x-www-form-urlencoded');
     const reqData = data ? data.toString() : '';
 
-    return this.http.post(AppSettings.API_URL + url, reqData, this.httpOptions);
+    return this.http.post(environment.apiURL + url, reqData, this.httpOptions);
   };
 
   // Common patch request format
@@ -58,11 +58,11 @@ export class ApiService {
     const newUrl = id ? `${url}/${id}` : url;
     const reqData = data ? data.toString() : '';
 
-    return this.http.patch(AppSettings.API_URL + newUrl, reqData, this.httpOptions);
+    return this.http.patch(environment.apiURL + newUrl, reqData, this.httpOptions);
   };
 
   // Common delete request format
   deleteRequest = (url: string): Observable<any> => {
-    return this.http.delete(AppSettings.API_URL + url, this.httpOptions);
+    return this.http.delete(environment.apiURL + url, this.httpOptions);
   };
 }
