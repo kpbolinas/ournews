@@ -175,7 +175,16 @@ class ArticleComments extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="row mb-2 comment-section">{commentSection}</div>
+            {!comments?.length && (
+              <div className="row">
+                <div className="d-flex text-center align-middle justify-content-center align-items-center">
+                  No comment(s) found.
+                </div>
+              </div>
+            )}
+            {comments?.length > 0 && (
+              <div className="row mb-2 comment-section">{commentSection}</div>
+            )}
             <Paginate
               currentPage={this.state.page}
               lastPage={this.state.lastPage}
