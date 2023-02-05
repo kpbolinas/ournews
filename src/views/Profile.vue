@@ -67,7 +67,7 @@
             }"
           >
             <td
-              class="cursor-pointer"
+              class="cursor-pointer w-25"
               @click="displayMailDetailModal(true, mail.is_read, mail.id)"
             >
               OUR NEWS
@@ -78,7 +78,7 @@
             >
               {{ mail.subject }}
             </td>
-            <td>
+            <td class="w-25">
               <a
                 class="btn btn-link"
                 data-bs-toggle="tooltip"
