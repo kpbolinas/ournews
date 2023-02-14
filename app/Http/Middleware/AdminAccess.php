@@ -18,13 +18,15 @@ class AdminAccess
     public function handle(Request $request, Closure $next)
     {
 
-        if (!in_array(
-            $request->user()->role,
-            [
-                UserRole::Admin->value,
-                UserRole::SuperAdmin->value
-            ]
-        )) {
+        if (
+            !in_array(
+                $request->user()->role,
+                [
+                    UserRole::Admin->value,
+                    UserRole::SuperAdmin->value
+                ]
+            )
+        ) {
             abort(403, 'Access Denied (Forbidden)');
         }
 

@@ -86,11 +86,13 @@ class UserController extends Controller
     public function login(Request $request)
     {
         try {
-            if (Auth::attempt([
+            if (
+                Auth::attempt([
                 'email' => $request->email,
                 'password' => $request->password,
                 'activated' => UserStatus::Active,
-            ])) {
+                ])
+            ) {
                 $user = $request->user();
                 PersonalAccessToken::where('tokenable_id', $user->id)->delete();
                 $data = [

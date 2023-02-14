@@ -17,13 +17,15 @@ class ReporterAccess
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!in_array(
-            $request->user()->role,
-            [
-                UserRole::Reporter->value,
-                UserRole::Moderator->value
-            ]
-        )) {
+        if (
+            !in_array(
+                $request->user()->role,
+                [
+                    UserRole::Reporter->value,
+                    UserRole::Moderator->value
+                ]
+            )
+        ) {
             abort(403, 'Access Denied (Forbidden)');
         }
 

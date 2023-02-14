@@ -46,13 +46,15 @@ class ArticleController extends Controller
      */
     public function detail(Article $article)
     {
-        if (!in_array(
-            $article->status,
-            [
-                ArticleStatus::Draft->value,
-                ArticleStatus::ForRevision->value
-            ]
-        )) {
+        if (
+            !in_array(
+                $article->status,
+                [
+                    ArticleStatus::Draft->value,
+                    ArticleStatus::ForRevision->value
+                ]
+            )
+        ) {
             return response()
                 ->respondBadRequest([], 'Article should be under For Approval status.');
         }
@@ -118,13 +120,15 @@ class ArticleController extends Controller
     {
         try {
             $this->authorize('delete', $article);
-            if (!in_array(
-                $article->status,
-                [
-                    ArticleStatus::Draft->value,
-                    ArticleStatus::ForRevision->value
-                ]
-            )) {
+            if (
+                !in_array(
+                    $article->status,
+                    [
+                        ArticleStatus::Draft->value,
+                        ArticleStatus::ForRevision->value
+                    ]
+                )
+            ) {
                 return response()
                     ->respondBadRequest([], 'Article should be under Draft or For Revision status.');
             }

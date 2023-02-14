@@ -11,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class RegistrationVerification extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The data to use for sending mail.
