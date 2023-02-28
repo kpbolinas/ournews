@@ -24,8 +24,8 @@ class SuperAdminSeeder extends Seeder
             'first_name' => 'Super',
             'last_name' => 'Admin',
             'password' => Hash::make(config('custom.default_password')),
-            'role' => UserRole::SuperAdmin,
-            'activated' => UserStatus::Active,
+            'role' => UserRole::SuperAdmin->value,
+            'activated' => UserStatus::Active->value,
             'created_at' => $now,
             'updated_at' => $now,
         ]);

@@ -41,8 +41,8 @@ class UserController extends Controller
             $vtoken = 'UR' . Str::random(10);
             $data['password'] = Hash::make($data['password']);
             $data += [
-                'role' => UserRole::User,
-                'activated' => UserStatus::Inactive,
+                'role' => UserRole::User->value,
+                'activated' => UserStatus::Inactive->value,
                 'verification_token' => $vtoken,
             ];
             $user = User::create($data);
@@ -88,9 +88,9 @@ class UserController extends Controller
         try {
             if (
                 Auth::attempt([
-                'email' => $request->email,
-                'password' => $request->password,
-                'activated' => UserStatus::Active,
+                    'email' => $request->email,
+                    'password' => $request->password,
+                    'activated' => UserStatus::Active->value,
                 ])
             ) {
                 $user = $request->user();
@@ -160,7 +160,7 @@ class UserController extends Controller
 
                 switch ($type) {
                     case 'UR': // User Registration
-                        $user->activated = UserStatus::Active;
+                        $user->activated = UserStatus::Active->value;
                         $user->save();
 
                         return response()->respondSuccess([], 'Verification successful.');

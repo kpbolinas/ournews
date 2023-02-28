@@ -101,7 +101,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            if (in_array($user->role, [UserRole::SuperAdmin->value, UserRole::User])) {
+            if (in_array($user->role, [UserRole::SuperAdmin->value, UserRole::User->value])) {
                 return response()
                     ->respondBadRequest([], 'Member should be a Reporter, Moderator or an Admin only.');
             }
@@ -148,7 +148,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            if (in_array($user->role, [UserRole::SuperAdmin->value, UserRole::User])) {
+            if (in_array($user->role, [UserRole::SuperAdmin->value, UserRole::User->value])) {
                 return response()
                     ->respondBadRequest([], 'Member should be a Reporter, Moderator or an Admin only.');
             }
